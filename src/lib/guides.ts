@@ -201,6 +201,20 @@ export const GUIDES: Guide[] = [
     ],
   },
   {
+    slug: "harnesses",
+    name: "Harnesses & shapes",
+    group: "together",
+    summary:
+      "A harness holds a compatible shape in place so it can be worn hands-free. People of every gender use them, in every kind of relationship.",
+    goodFor: ["Partnered play, whoever wears it", "Trying new roles together", "Pairing a harness with a harness-compatible shape"],
+    steps: [
+      "Adjust the straps before you start, so it feels snug but never tight.",
+      "Check that the shape has a flared base and sits securely in the O-ring.",
+      "Use plenty of water-based lubricant.",
+      "Go slowly, check in with each other, and agree on a word that means stop.",
+    ],
+  },
+  {
     slug: "sets",
     name: "Sets",
     group: "together",
@@ -322,6 +336,8 @@ const TYPE_TO_GUIDE: Record<string, string> = {
   "vibrating couples ring": "rings",
   "vibrating ring": "rings",
   "silicone ring set": "rings",
+  harness: "harnesses",
+  "harness-compatible shape": "harnesses",
   "couples set": "sets",
   "gift set": "sets",
   "card game": "card-games",

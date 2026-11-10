@@ -38,7 +38,7 @@ export default function GuidesPage() {
         </h1>
         <p className="mt-5 text-[17px] leading-relaxed text-ink-muted">
           Short, plain-language guides to what each kind of product is, who it suits and how to use it. No jargon,
-          no judgement.
+          no judgement, and written for every body and every kind of relationship.
         </p>
       </header>
 

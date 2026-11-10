@@ -8,6 +8,7 @@ const nav = [
   { label: "For her", href: "/shop?audience=for-her" },
   { label: "For him", href: "/shop?audience=for-him" },
   { label: "Couples", href: "/shop?audience=for-couples" },
+  { label: "LGBTQ+", href: "/shop?audience=for-lgbtq" },
   { label: "Care", href: "/shop?category=care" },
   { label: "Guides", href: "/guides" },
 ];

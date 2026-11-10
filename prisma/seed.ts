@@ -42,6 +42,13 @@ const PRODUCTS: Record<string, string> = {
   "duet-massage-oil": "for-couples,care,scented",
   "aloe-glide": "water-based,toy-safe",
   "travel-lock-case": "travel-size,care,gift",
+  // LGBTQ+ collection (lgbtq-products.csv)
+  "spectrum-wand": "for-lgbtq,beginner-friendly,whisper-quiet,waterproof,rechargeable,body-safe-silicone",
+  "kinship-harness": "for-lgbtq,for-couples,beginner-friendly",
+  "kinship-shape": "for-lgbtq,for-couples,beginner-friendly,waterproof,body-safe-silicone",
+  "prism-glide": "water-based,toy-safe",
+  "pride-discovery-set": "for-lgbtq,for-couples,gift,beginner-friendly",
+  "closer-cards-queer": "for-lgbtq,for-couples,beginner-friendly,gift",
 };
 
 // theme -> [positive line, negative line]
@@ -117,7 +124,7 @@ type Row = {
 function reviewsFor(handle: string, tags: string[]): Row[] {
   const r = rng(handle);
   const pool = themesFor(tags);
-  if (handle === "closer-cards") pool.push("conversation");
+  if (handle.startsWith("closer-cards")) pool.push("conversation");
   const count = 4 + Math.floor(r() * 6); // 4-9 reviews
   const rows: Row[] = [];
   for (let i = 0; i < count; i++) {

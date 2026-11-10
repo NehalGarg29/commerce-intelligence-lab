@@ -27,7 +27,10 @@ export const TOOL_INPUTS = {
       .max(60)
       .optional()
       .describe("Optional 1-2 keywords. Every word must appear in the product's name, description, type or tags."),
-    audience: z.enum(AUDIENCE_KEYS).optional(),
+    audience: z
+      .enum(AUDIENCE_KEYS)
+      .optional()
+      .describe("Store category. for-lgbtq is the LGBTQ+ collection. Don't infer a gendered category the shopper didn't ask for."),
     category: z.enum(["care"]).optional().describe("'care' = lubricants, cleaners, massage oils and storage"),
     features: z.array(z.enum(FEATURES)).max(4).optional(),
     maxPrice: z.number().positive().max(2000).optional(),

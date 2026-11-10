@@ -182,3 +182,23 @@ export async function removeLine(lineId: string): Promise<Cart> {
   );
   return unwrap(data.cartLinesRemove);
 }
+
+// For the Agent API: a brand-new cart that is NOT tied to this visitor's cookie.
+// The agent gets the Shopify checkout link and a human completes the purchase.
+// The `source` attribute shows up on the resulting order in Shopify admin.
+export async function createAgentCart(lines: NewLine[], agentName: string): Promise<{ checkoutUrl: string; totalQuantity: number }> {
+  const data = await shopifyFetch<{ cartCreate: CartPayload }>(
+    `mutation Create($lines: [CartLineInput!]!, $attributes: [AttributeInput!]) {
+      cartCreate(input: { lines: $lines, attributes: $attributes }) { cart { ${CART_FIELDS} } userErrors { message } }
+    }`,
+    {
+      lines,
+      attributes: [
+        { key: "source", value: "agent-api" },
+        { key: "agent", value: agentName.slice(0, 60) },
+      ],
+    }
+  );
+  const cart = unwrap(data.cartCreate);
+  return { checkoutUrl: cart.checkoutUrl, totalQuantity: cart.totalQuantity };
+}

@@ -8,6 +8,7 @@ export const AUDIENCES: Record<string, string> = {
   "for-her": "For her",
   "for-him": "For him",
   "for-couples": "Couples",
+  "for-lgbtq": "LGBTQ+",
 };
 
 export const BRANDS = ["Lumen Atelier", "Velvet Theory", "Pulse Lab", "Lumen Essentials"];
@@ -163,6 +164,8 @@ export function activeFilterCount(f: ShopFilters): number {
 
 export function pageTitle(f: ShopFilters): { title: string; subtitle: string } {
   if (f.q) return { title: `Results for “${f.q}”`, subtitle: "Searching names, descriptions and features." };
+  if (f.audience === "for-lgbtq")
+    return { title: "LGBTQ+", subtitle: "For every body and every kind of love. Body-safe and discreetly delivered." };
   if (f.audience) return { title: AUDIENCES[f.audience], subtitle: "Thoughtfully designed, body-safe and discreetly delivered." };
   if (f.category === "care") return { title: "Care", subtitle: "Lubricants and cleaners that work with every collection." };
   if (f.brand) return { title: brandName(f.brand), subtitle: "Every piece from this brand, live from the catalog." };

@@ -29,6 +29,7 @@ const quickPicks = [
   { label: "Whisper-quiet", href: "/shop?tag=whisper-quiet" },
   { label: "Under $100", href: "/shop?maxPrice=100" },
   { label: "For couples", href: "/shop?audience=for-couples" },
+  { label: "LGBTQ+", href: "/shop?audience=for-lgbtq" },
 ];
 
 const values = [
@@ -46,6 +47,7 @@ const categories = [
   { handle: "for-her", label: "For her", href: "/shop?audience=for-her", fallback: "/images/her.jpg" },
   { handle: "for-him", label: "For him", href: "/shop?audience=for-him", fallback: "/images/him.jpg" },
   { handle: "couples", label: "Couples", href: "/shop?audience=for-couples", fallback: "/images/couples.jpg" },
+  { handle: "lgbtq", label: "LGBTQ+", href: "/shop?audience=for-lgbtq", fallback: "/images/couples.jpg" },
   { handle: "care", label: "Care", href: "/shop?category=care", fallback: "/images/care.jpg" },
 ];
 
@@ -54,9 +56,9 @@ function findCollection(collections: Collection[], handle: string) {
 }
 
 const brands = [
-  { name: "Lumen Atelier", line: "Sculptural, design-led pieces for her", lead: "aura-wand" },
+  { name: "Lumen Atelier", line: "Sculptural, design-led massagers and vibrators", lead: "aura-wand" },
   { name: "Velvet Theory", line: "Made to be shared, built for couples", lead: "tide-duo" },
-  { name: "Pulse Lab", line: "Modern essentials, engineered for him", lead: "flux-stroker" },
+  { name: "Pulse Lab", line: "Strokers, rings and prostate essentials, engineered", lead: "flux-stroker" },
   { name: "Lumen Essentials", line: "Gentle care for every collection", lead: "silk-glide" },
 ];
 
@@ -295,18 +297,20 @@ export default async function HomePage() {
       {/* ───────────── Shop by ───────────── */}
       <section className="fx-reveal mx-auto max-w-7xl px-5 pt-20 md:px-12 md:pt-24">
         <SectionHeading eyebrow="EXPLORE" title="Shop by" />
-        <div className="mt-8 grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
-          {tiles.map((c) => (
+        <div className="mt-8 grid grid-cols-2 gap-3 md:grid-cols-5 md:gap-4">
+          {tiles.map((c, i) => (
             <Link
               key={c.label}
               href={c.href}
-              className="group relative aspect-[4/5] overflow-hidden rounded-2xl focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-plum-700"
+              className={`group relative overflow-hidden ${
+                i === tiles.length - 1 ? "col-span-2 aspect-[2/1] md:col-span-1 md:aspect-[4/5]" : "aspect-[4/5]"
+              } rounded-2xl focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-plum-700`}
             >
               <Image
                 src={c.image}
                 alt=""
                 fill
-                sizes="(min-width: 768px) 25vw, 50vw"
+                sizes="(min-width: 768px) 20vw, 50vw"
                 className="object-cover transition duration-700 ease-out group-hover:scale-105"
               />
               <div className="absolute inset-0 bg-linear-to-t from-plum-900/75 via-plum-900/5 to-transparent" />
