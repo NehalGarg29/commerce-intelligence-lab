@@ -66,3 +66,41 @@ model ApiKey {
   lastUsedAt DateTime?
   revokedAt  DateTime?
 }
+
+// ---------------------------------------------------------------------------
+// Mock ERP (warehouse system of record) for the ERP sync demo. In production
+// this data lives in SAP / NetSuite and reaches the app through middleware;
+// here it is a small, clearly-labelled simulation keyed by Shopify variant id.
+
+model ErpStock {
+  variantId     String    @id // gid://shopify/ProductVariant/...
+  sku           String
+  productHandle String
+  title         String
+  onHand        Int // physically in the warehouse
+  allocated     Int       @default(0) // reserved for retailer orders not yet shipped
+  incoming      Int       @default(0) // on a factory purchase order
+  incomingEta   DateTime?
+  updatedAt     DateTime  @updatedAt
+}
+
+// Audit trail of everything the sync page does (pushes, exports, simulated warehouse activity).
+model ErpSyncLog {
+  id        String   @id @default(cuid())
+  type      String // push | export | warehouse
+  summary   String
+  detail    Json?
+  actor     String
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+}
+
+// Which Shopify B2B draft orders have been handed to the ERP.
+model ErpOrderExport {
+  draftOrderId String   @id
+  name         String
+  units        Int
+  exportedAt   DateTime @default(now())
+  actor        String
+}

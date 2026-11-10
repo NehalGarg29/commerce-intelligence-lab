@@ -30,6 +30,7 @@ const COLUMNS: { title: string; links: { label: string; href: string }[] }[] = [
       { label: "Retail partners", href: "/retail" },
       { label: "Agent API", href: "/agents" },
       { label: "Insights", href: "/insights" },
+      { label: "ERP sync", href: "/erp" },
     ],
   },
 ];
