@@ -9,6 +9,7 @@ const nav = [
   { label: "For him", href: "/shop?audience=for-him" },
   { label: "Couples", href: "/shop?audience=for-couples" },
   { label: "Care", href: "/shop?category=care" },
+  { label: "Guides", href: "/guides" },
 ];
 
 export function SiteHeader() {

@@ -16,6 +16,8 @@ import { ProductPurchase } from "@/components/product/product-purchase";
 import { RitualCard } from "@/components/rituals/ritual-card";
 import { CompareToggle } from "@/components/compare/compare-toggle";
 import { resolveRitual, ritualsFor } from "@/lib/rituals";
+import { HowToUse } from "@/components/guides/how-to-use";
+import { guideFor } from "@/lib/guides";
 
 type Params = Promise<{ handle: string }>;
 
@@ -145,6 +147,14 @@ async function ProductView({ params }: { params: Params }) {
             <p className="text-[11px] tracking-[0.18em] text-ink-muted">{product.brand.toUpperCase()} · {product.type.toUpperCase()}</p>
             <h1 className="mt-2 font-display text-4xl tracking-tight text-plum-800 md:text-5xl">{product.title}</h1>
             <p className="mt-4 text-[16px] leading-relaxed text-ink-muted">{product.description}</p>
+            {guideFor(product) && (
+              <a
+                href="#how-to-use"
+                className="mt-3 inline-block text-[14px] font-medium text-plum-800 underline decoration-mauve-400 underline-offset-4 hover:text-plum-700"
+              >
+                New to this? See how to use it ↓
+              </a>
+            )}
           </div>
 
           <ProductPurchase variants={product.variants} giftNote={product.tags.includes("gift-box")} />
@@ -168,6 +178,8 @@ async function ProductView({ params }: { params: Params }) {
           <Details product={product} />
         </div>
       </div>
+
+      <HowToUse product={product} />
 
       {rituals.length > 0 && (
         <section className="mt-24">
