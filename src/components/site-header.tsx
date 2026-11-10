@@ -14,9 +14,6 @@ const nav = [
 export function SiteHeader() {
   return (
     <>
-      <div className="border-b border-lavender-100 bg-ivory px-4 py-2 text-center text-[11px] tracking-wide text-ink-muted sm:text-[12px]">
-        Independent concept prototype · fictional demo products and reviews · not affiliated with any real brand
-      </div>
       <header className="sticky top-0 z-40 border-b border-white/40 bg-ivory/50 backdrop-blur-xl backdrop-saturate-150">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 pt-4 md:px-12 md:py-4">
           <Link href="/" className="leading-tight">
