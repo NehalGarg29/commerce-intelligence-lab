@@ -10,6 +10,10 @@ import { AUDIENCES } from "@/lib/catalog/filters";
 import { careAdvice } from "@/lib/catalog/compatibility";
 import { productImageSrc } from "@/lib/catalog/local-images";
 import { formatPrice } from "@/lib/format";
+import { getReviewIntel } from "@/lib/reviews";
+import { themeVerdict } from "@/lib/reviews/analyze";
+import { RatingInline } from "@/components/reviews/stars";
+import { AskAdvisorButton } from "@/components/advisor/ask-advisor-button";
 
 export const metadata: Metadata = { title: "Compare · Lumen Atelier" };
 
@@ -58,7 +62,7 @@ function Row({ label, cells, differs }: { label: string; cells: React.ReactNode[
 
 async function CompareView({ searchParams }: { searchParams: SearchParams }) {
   const handles = parseHandles((await searchParams).items);
-  const all = await getProducts();
+  const [all, intel] = await Promise.all([getProducts(), getReviewIntel()]);
   const products = handles.map((h) => all.find((p) => p.handle === h)).filter((p): p is Product => !!p);
 
   if (products.length < 2) {
@@ -89,6 +93,27 @@ async function CompareView({ searchParams }: { searchParams: SearchParams }) {
     Object.keys(AUDIENCES).filter((a) => p.tags.includes(a)).map((a) => AUDIENCES[a]).join(", ") || "Everyone";
   const optionText = (p: Product) =>
     p.variants.length === 1 && p.variants[0].title === "Default Title" ? "One option" : p.variants.map((v) => v.title).join(", ");
+  const bestRated = Math.max(...products.map((p) => p.rating?.average ?? 0));
+  const reviewCells = products.map((p) => {
+    if (!p.rating) return <span key={p.id} className="text-ink-muted">No reviews yet</span>;
+    const praised = (intel[p.handle]?.themes ?? [])
+      .filter((t) => themeVerdict(t) === "praised")
+      .slice(0, 2)
+      .map((t) => t.label);
+    return (
+      <div key={p.id} className="flex flex-col gap-1.5">
+        <span className="flex flex-wrap items-center gap-2">
+          <a href={`/products/${p.handle}#reviews`} className="hover:opacity-80">
+            <RatingInline average={p.rating.average} count={p.rating.count} />
+          </a>
+          {products.length > 1 && p.rating.average === bestRated && (
+            <span className="rounded-full bg-[#E3F0E7] px-2 py-0.5 text-[11px] text-[#1F4D30]">Top rated</span>
+          )}
+        </span>
+        {praised.length > 0 && <span className="text-[13px] text-ink-muted">Praised for: {praised.join(", ")}</span>}
+      </div>
+    );
+  });
   const pairingText = (p: Product) => {
     const advice = careAdvice(p);
     if (!advice) return "Not applicable";
@@ -152,7 +177,7 @@ async function CompareView({ searchParams }: { searchParams: SearchParams }) {
             />
           ))}
           <Row label="Lubricant pairing" cells={products.map(pairingText)} differs={differs(products.map(pairingText))} />
-          <Row label="Reviews" cells={products.map(() => <span key="r" className="text-ink-muted">Coming with review intelligence</span>)} />
+          <Row label="Reviews (demo)" cells={reviewCells} />
           <tr className="border-t border-lavender-100">
             <td className="p-4" />
             {products.map((p) => (
@@ -179,11 +204,11 @@ export default function ComparePage({ searchParams }: { searchParams: SearchPara
         <div>
           <p className="text-[11px] tracking-[0.2em] text-ink-muted">SIDE BY SIDE</p>
           <h1 className="mt-2 font-display text-4xl tracking-tight text-plum-800 md:text-5xl">Compare</h1>
-          <p className="mt-2 text-[15px] text-ink-muted">Every value comes live from the Shopify catalog. Rows that differ are marked.</p>
+          <p className="mt-2 text-[15px] text-ink-muted">Prices, stock and features come live from Shopify; reviews are fictional demo data. Rows that differ are marked.</p>
         </div>
-        <Link href="/advisor" className="inline-flex h-11 items-center gap-2 rounded-full border border-plum-700 px-5 text-sm font-medium text-plum-700">
+        <AskAdvisorButton className="inline-flex h-11 items-center gap-2 rounded-full border border-plum-700 px-5 text-sm font-medium text-plum-700">
           <Sparkles size={15} aria-hidden="true" /> Still unsure? Ask the advisor
-        </Link>
+        </AskAdvisorButton>
       </div>
       <div className="mt-8">
         <Suspense fallback={<div className="h-[600px] animate-pulse rounded-3xl bg-lavender-100/50" />}>

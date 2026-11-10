@@ -9,7 +9,8 @@ import { MAX_COMPARE, compareHref, useCompare } from "@/lib/compare-store";
 export function CompareBar() {
   const { items, remove, clear } = useCompare();
   const pathname = usePathname();
-  if (items.length === 0 || pathname === "/compare") return null;
+  // Hidden where it would cover the page's own controls.
+  if (items.length === 0 || pathname === "/compare" || pathname === "/advisor") return null;
 
   return (
     <div

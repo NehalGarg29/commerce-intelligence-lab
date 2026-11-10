@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Sparkles } from "lucide-react";
+import { AskAdvisorButton } from "@/components/advisor/ask-advisor-button";
 
 export default function NotFound() {
   return (
@@ -13,9 +14,9 @@ export default function NotFound() {
         <Link href="/shop" className="inline-flex h-12 items-center rounded-full bg-plum-700 px-7 font-medium text-white">
           Browse the collection
         </Link>
-        <Link href="/advisor" className="inline-flex h-12 items-center gap-2 rounded-full border border-plum-700 px-7 font-medium text-plum-700">
+        <AskAdvisorButton className="inline-flex h-12 items-center gap-2 rounded-full border border-plum-700 px-7 font-medium text-plum-700">
           <Sparkles size={16} aria-hidden="true" /> Ask the advisor
-        </Link>
+        </AskAdvisorButton>
       </div>
     </main>
   );

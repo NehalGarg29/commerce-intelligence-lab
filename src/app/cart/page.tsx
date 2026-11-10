@@ -7,6 +7,7 @@ import { getCart } from "@/lib/cart";
 import { productImageSrc } from "@/lib/catalog/local-images";
 import { formatPrice } from "@/lib/format";
 import { removeLineAction, updateLineAction } from "@/app/actions/cart";
+import { AskAdvisorButton } from "@/components/advisor/ask-advisor-button";
 
 export const metadata: Metadata = { title: "Your bag · Lumen Atelier" };
 
@@ -20,7 +21,7 @@ async function CartView() {
         <p className="mx-auto mt-3 max-w-md text-ink-muted">Browse the collection, or let the advisor narrow it down for you.</p>
         <div className="mt-8 flex flex-wrap justify-center gap-3">
           <Link href="/shop" className="inline-flex h-12 items-center rounded-full bg-plum-700 px-7 font-medium text-white">Shop the collection</Link>
-          <Link href="/advisor" className="inline-flex h-12 items-center rounded-full border border-plum-700 px-7 font-medium text-plum-700">Ask the advisor</Link>
+          <AskAdvisorButton className="inline-flex h-12 items-center rounded-full border border-plum-700 px-7 font-medium text-plum-700">Ask the advisor</AskAdvisorButton>
         </div>
       </div>
     );

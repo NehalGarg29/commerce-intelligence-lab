@@ -18,6 +18,8 @@ import { CompareToggle } from "@/components/compare/compare-toggle";
 import { resolveRitual, ritualsFor } from "@/lib/rituals";
 import { HowToUse } from "@/components/guides/how-to-use";
 import { guideFor } from "@/lib/guides";
+import { ReviewsSection, ReviewsSkeleton } from "@/components/reviews/reviews-section";
+import { RatingInline } from "@/components/reviews/stars";
 
 type Params = Promise<{ handle: string }>;
 
@@ -146,6 +148,11 @@ async function ProductView({ params }: { params: Params }) {
           <div>
             <p className="text-[11px] tracking-[0.18em] text-ink-muted">{product.brand.toUpperCase()} · {product.type.toUpperCase()}</p>
             <h1 className="mt-2 font-display text-4xl tracking-tight text-plum-800 md:text-5xl">{product.title}</h1>
+            {product.rating && (
+              <a href="#reviews" className="mt-3 inline-flex hover:opacity-80" aria-label="Jump to reviews">
+                <RatingInline average={product.rating.average} count={product.rating.count} size={15} />
+              </a>
+            )}
             <p className="mt-4 text-[16px] leading-relaxed text-ink-muted">{product.description}</p>
             {guideFor(product) && (
               <a
@@ -180,6 +187,10 @@ async function ProductView({ params }: { params: Params }) {
       </div>
 
       <HowToUse product={product} />
+
+      <Suspense fallback={<ReviewsSkeleton />}>
+        <ReviewsSection handle={product.handle} />
+      </Suspense>
 
       {rituals.length > 0 && (
         <section className="mt-24">

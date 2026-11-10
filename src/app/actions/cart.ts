@@ -82,3 +82,41 @@ export async function addRitualAction(_prev: AddToBagState, formData: FormData):
     return { status: "error", message: e instanceof CartError ? e.message : "Could not reach the store. Please try again." };
   }
 }
+
+// The advisor can only *prepare* a bag. This action is the shopper's confirmation:
+// it accepts at most 4 lines, re-validates every variant id and re-checks live
+// stock before anything reaches the Shopify cart.
+export async function addAdvisorBagAction(_prev: AddToBagState, formData: FormData): Promise<AddToBagState> {
+  let raw: unknown;
+  try {
+    raw = JSON.parse(String(formData.get("lines") ?? "[]"));
+  } catch {
+    return { status: "error", message: "Invalid bag." };
+  }
+  if (!Array.isArray(raw) || raw.length < 1 || raw.length > 4) return { status: "error", message: "Invalid bag." };
+
+  const lines: { merchandiseId: string; quantity: number }[] = [];
+  for (const item of raw) {
+    const id = String((item as { variantId?: unknown })?.variantId ?? "");
+    const qty = Number((item as { quantity?: unknown })?.quantity);
+    if (!VARIANT_ID.test(id) || !Number.isInteger(qty) || qty < 1 || qty > 3) {
+      return { status: "error", message: "Invalid bag." };
+    }
+    lines.push({ merchandiseId: id, quantity: qty });
+  }
+
+  const variants = (await getProducts()).flatMap((p) => p.variants);
+  for (const l of lines) {
+    const v = variants.find((x) => x.id === l.merchandiseId);
+    if (!v || !v.available || (v.quantity !== null && v.quantity < l.quantity)) {
+      return { status: "error", message: "Something in this bag just went out of stock. Ask the advisor again." };
+    }
+  }
+  try {
+    await addLines(lines);
+    refresh();
+    return { status: "added", message: `${lines.length} ${lines.length === 1 ? "item" : "items"} added to your bag.` };
+  } catch (e) {
+    return { status: "error", message: e instanceof CartError ? e.message : "Could not reach the store. Please try again." };
+  }
+}

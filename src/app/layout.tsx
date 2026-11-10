@@ -5,6 +5,7 @@ import "./globals.css";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { CompareBar } from "@/components/compare/compare-bar";
+import { AdvisorWidget } from "@/components/advisor/advisor-widget";
 
 const fraunces = Fraunces({ subsets: ["latin"], variable: "--font-fraunces" });
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
@@ -23,6 +24,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <SiteFooter />
         <Suspense fallback={null}>
           <CompareBar />
+          <AdvisorWidget />
         </Suspense>
       </body>
     </html>

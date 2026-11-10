@@ -81,6 +81,7 @@ function toProduct(p: ShopifyProduct): Product {
       sku: v.sku,
       options: v.selectedOptions,
     })),
+    rating: null,
   };
 }
 

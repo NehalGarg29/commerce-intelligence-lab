@@ -23,6 +23,8 @@ export type Product = {
   imageUrl: string | null;
   images: { url: string; alt: string | null }[];
   variants: Variant[];
+  // Attached from the review database, not Shopify. null = no reviews (or DB unavailable).
+  rating: { average: number; count: number } | null;
 };
 
 export type Collection = {

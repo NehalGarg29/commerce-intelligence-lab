@@ -30,6 +30,7 @@ export const SORTS = {
   featured: "Featured",
   "price-asc": "Price: low to high",
   "price-desc": "Price: high to low",
+  rating: "Best reviewed",
   name: "Name: A to Z",
 } as const;
 export type SortKey = keyof typeof SORTS;
@@ -42,6 +43,7 @@ export type ShopFilters = {
   tags: string[];
   maxPrice: number | null;
   inStock: boolean;
+  minRating: 4 | null;
   sort: SortKey;
 };
 
@@ -65,6 +67,7 @@ export function parseShopParams(raw: RawParams): ShopFilters {
     tags: [...new Set(tagValues.filter((t) => t in FEATURE_LABELS))],
     maxPrice: Number.isFinite(maxPrice) && maxPrice > 0 ? maxPrice : null,
     inStock: one(raw.inStock) === "1",
+    minRating: one(raw.rating) === "4" ? 4 : null,
     sort: sort && sort in SORTS ? (sort as SortKey) : "featured",
   };
 }
@@ -94,6 +97,7 @@ export function applyFilters(products: Product[], f: ShopFilters): Product[] {
     if (f.tags.some((t) => !p.tags.includes(t))) return false;
     if (f.maxPrice !== null && p.priceMin > f.maxPrice) return false;
     if (f.inStock && !p.available) return false;
+    if (f.minRating !== null && (p.rating?.average ?? 0) < f.minRating) return false;
     return true;
   });
 
@@ -102,6 +106,12 @@ export function applyFilters(products: Product[], f: ShopFilters): Product[] {
       return result.sort((a, b) => a.priceMin - b.priceMin);
     case "price-desc":
       return result.sort((a, b) => b.priceMin - a.priceMin);
+    case "rating":
+      // Average first, then number of reviews; unrated products last
+      return result.sort(
+        (a, b) =>
+          (b.rating?.average ?? 0) - (a.rating?.average ?? 0) || (b.rating?.count ?? 0) - (a.rating?.count ?? 0)
+      );
     case "name":
       return result.sort((a, b) => a.title.localeCompare(b.title));
     default:
@@ -118,6 +128,7 @@ export const DEFAULT_FILTERS: ShopFilters = {
   tags: [],
   maxPrice: null,
   inStock: false,
+  minRating: null,
   sort: "featured",
 };
 
@@ -131,6 +142,7 @@ export function shopHref(f: ShopFilters, patch: Partial<ShopFilters> = {}): stri
   if (next.tags.length) sp.set("tag", next.tags.join(","));
   if (next.maxPrice !== null) sp.set("maxPrice", String(next.maxPrice));
   if (next.inStock) sp.set("inStock", "1");
+  if (next.minRating) sp.set("rating", String(next.minRating));
   if (next.sort !== "featured") sp.set("sort", next.sort);
   const qs = sp.toString();
   return qs ? `/shop?${qs}` : "/shop";
@@ -144,7 +156,8 @@ export function activeFilterCount(f: ShopFilters): number {
     (f.brand ? 1 : 0) +
     f.tags.length +
     (f.maxPrice !== null ? 1 : 0) +
-    (f.inStock ? 1 : 0)
+    (f.inStock ? 1 : 0) +
+    (f.minRating ? 1 : 0)
   );
 }
 

@@ -20,6 +20,7 @@ import {
 import { ProductCard, ProductCardSkeleton } from "@/components/product-card";
 import { FilterSidebar } from "@/components/shop/filter-sidebar";
 import { SortSelect } from "@/components/shop/sort-select";
+import { AskAdvisorButton } from "@/components/advisor/ask-advisor-button";
 
 export const metadata: Metadata = {
   title: "Shop · Lumen Atelier",
@@ -39,6 +40,7 @@ function activeChips(f: ShopFilters): { label: string; href: string }[] {
   }
   if (f.maxPrice !== null) chips.push({ label: `Under $${f.maxPrice}`, href: shopHref(f, { maxPrice: null }) });
   if (f.inStock) chips.push({ label: "In stock", href: shopHref(f, { inStock: false }) });
+  if (f.minRating) chips.push({ label: "4★ & up", href: shopHref(f, { minRating: null }) });
   return chips;
 }
 
@@ -155,9 +157,9 @@ async function ShopResults({ searchParams }: { searchParams: SearchParams }) {
                 <Link href="/shop" className="inline-flex h-11 items-center rounded-full border border-plum-700 px-6 text-sm font-medium text-plum-700">
                   Clear all filters
                 </Link>
-                <Link href="/advisor" className="inline-flex h-11 items-center gap-2 rounded-full bg-plum-700 px-6 text-sm font-medium text-white">
+                <AskAdvisorButton className="inline-flex h-11 items-center gap-2 rounded-full bg-plum-700 px-6 text-sm font-medium text-white">
                   <Sparkles size={15} aria-hidden="true" /> Ask the advisor
-                </Link>
+                </AskAdvisorButton>
               </div>
             </div>
           )}

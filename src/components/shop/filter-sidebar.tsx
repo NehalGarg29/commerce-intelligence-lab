@@ -121,11 +121,21 @@ export function FilterSidebar({ products, filters }: { products: Product[]; filt
     },
   ];
 
+  const rating: Option[] = [
+    {
+      label: "4★ & up",
+      active: filters.minRating === 4,
+      href: shopHref(filters, { minRating: filters.minRating === 4 ? null : 4 }),
+      count: count({ minRating: 4 }),
+    },
+  ];
+
   return (
     <div className="flex flex-col gap-5">
       <Group title="Shop for" options={audience} />
       <Group title="Features" options={features} />
       <Group title="Budget" options={budgets} />
+      <Group title="Rating" options={rating} />
       <Group title="Brand" options={brands} />
       <Group title="Availability" options={stock} />
     </div>

@@ -4,6 +4,7 @@ import { productImageSrc } from "@/lib/catalog/local-images";
 import { featureLabels } from "@/lib/catalog/attributes";
 import { formatPrice } from "@/lib/format";
 import { ProductImage } from "./product-image";
+import { RatingInline } from "./reviews/stars";
 import { CompareToggle } from "./compare/compare-toggle";
 import type { Tone } from "./product-art";
 
@@ -54,6 +55,11 @@ export function ProductCard({ product }: { product: Product }) {
           <h3 className="font-display text-xl text-ink transition group-hover:text-plum-700">{product.title}</h3>
           <p className="shrink-0 text-[15px] text-ink">{formatPrice(product.priceMin, product.priceMax)}</p>
         </div>
+        {product.rating && (
+          <div className="mt-1.5">
+            <RatingInline average={product.rating.average} count={product.rating.count} />
+          </div>
+        )}
         {features.length > 0 && (
           <ul className="mt-2.5 flex flex-wrap gap-1.5" aria-label="Key features">
             {features.map((f) => (

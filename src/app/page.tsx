@@ -22,6 +22,7 @@ import { productImageSrc } from "@/lib/catalog/local-images";
 import { ProductCard, ProductCardSkeleton } from "@/components/product-card";
 import { RitualCard } from "@/components/rituals/ritual-card";
 import { RITUALS, resolveRitual } from "@/lib/rituals";
+import { AskAdvisorButton } from "@/components/advisor/ask-advisor-button";
 
 const quickPicks = [
   { label: "New to this", href: "/shop?tag=beginner-friendly" },
@@ -246,12 +247,10 @@ export default async function HomePage() {
               >
                 Shop the collection
               </Link>
-              <Link
-                href="/advisor"
-                className="inline-flex h-12 items-center justify-center gap-2 rounded-full border border-white/60 px-7 font-medium text-white backdrop-blur-sm transition hover:-translate-y-0.5 hover:bg-white/10"
+              <AskAdvisorButton className="inline-flex h-12 items-center justify-center gap-2 rounded-full border border-white/60 px-7 font-medium text-white backdrop-blur-sm transition hover:-translate-y-0.5 hover:bg-white/10"
               >
                 <Sparkles size={16} aria-hidden="true" /> Meet your AI advisor
-              </Link>
+              </AskAdvisorButton>
             </div>
 
             <div className="fx-fade-up fx-delay-3 mt-10">
@@ -368,12 +367,10 @@ export default async function HomePage() {
                 ))}
               </ol>
 
-              <Link
-                href="/advisor"
-                className="mt-10 inline-flex h-12 items-center gap-2 rounded-full bg-plum-700 px-7 font-medium text-white transition hover:-translate-y-0.5 hover:bg-plum-800"
+              <AskAdvisorButton className="mt-10 inline-flex h-12 items-center gap-2 rounded-full bg-plum-700 px-7 font-medium text-white transition hover:-translate-y-0.5 hover:bg-plum-800"
               >
                 Start a conversation <ArrowRight size={16} aria-hidden="true" />
-              </Link>
+              </AskAdvisorButton>
             </div>
 
             <figure className="rounded-3xl border border-lavender-100 bg-white p-5 shadow-xl shadow-plum-900/5 md:p-6">
