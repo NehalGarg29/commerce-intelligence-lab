@@ -63,7 +63,7 @@ export function buildKit(p: Product, intel: ProductReviewIntel | null): Marketin
 export function kitToMarkdown(k: MarketingKit): string {
   const lines = [
     `# ${k.title} — retailer marketing kit`,
-    `${k.brand} · Retail price ${k.retailPrice}`,
+    `${k.brand} · Suggested retail price (MSRP) ${k.retailPrice}. You set your own prices.`,
     "",
     "## Approved description",
     k.description,

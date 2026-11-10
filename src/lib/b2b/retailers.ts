@@ -16,12 +16,17 @@ export type Retailer = {
   catalog: string | null;
   priceList: PriceList;
   source: "shopify" | "demo";
+  // Shopify ids needed to place a B2B draft order for this location.
+  shopify?: { companyId: string; locationId: string; contactId: string | null };
 };
 
 type AdminCompanies = {
   companies: {
     nodes: {
+      id: string;
       name: string;
+      mainContact: { id: string } | null;
+      contacts: { nodes: { id: string }[] };
       locations: {
         nodes: {
           id: string;
@@ -50,7 +55,10 @@ type AdminCompanies = {
 const QUERY = `query RetailPartners {
   companies(first: 10) {
     nodes {
+      id
       name
+      mainContact { id }
+      contacts(first: 1) { nodes { id } }
       locations(first: 5) {
         nodes {
           id
@@ -143,6 +151,7 @@ async function loadShopifyRetailers(): Promise<Retailer[]> {
           fixedPrices: pl ? (fixedById[pl.id] ?? {}) : {},
         },
         source: "shopify" as const,
+        shopify: { companyId: c.id, locationId: l.id, contactId: c.mainContact?.id ?? c.contacts.nodes[0]?.id ?? null },
       };
     })
   );

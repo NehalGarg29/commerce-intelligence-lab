@@ -10,7 +10,8 @@ import { getRetailer } from "@/lib/b2b/retailers";
 import { describeAdjustment, retailMargin, wholesalePrice } from "@/lib/b2b/pricing";
 import { getDemand } from "@/lib/b2b/demand";
 import { recommendAssortment } from "@/lib/b2b/recommend";
-import { OrderBuilder, type OrderRow } from "@/components/b2b/order-builder";
+import { OrderBuilder, type RecommendedRow } from "@/components/b2b/order-builder";
+import { buildCatalog, resolveKits } from "@/lib/b2b/kits";
 import { canViewRetailer } from "@/lib/auth/session";
 
 type Params = Promise<{ id: string }>;
@@ -58,24 +59,17 @@ async function Portal({ params }: { params: Params }) {
     });
   const byHandle = new Map(priced.map((x) => [x.p.handle, x]));
 
-  const suggestions = recommendAssortment(products, demand, 8);
-  const rows: OrderRow[] = suggestions.flatMap((s) => {
-    const x = byHandle.get(s.product.handle);
-    if (!x) return [];
-    return [{
-      handle: s.product.handle,
-      title: s.product.title,
-      brand: s.product.brand,
-      imageUrl: productImageSrc(s.product.handle, s.product.imageUrl),
-      retail: x.retail,
-      wholesale: x.wholesale,
-      margin: x.margin,
-      stock: s.product.totalInventory,
-      score: s.score,
-      suggestedUnits: s.suggestedUnits,
-      reasons: s.reasons,
-    }];
-  });
+  const catalog = buildCatalog(products, list);
+  const kits = resolveKits(catalog);
+  const recommended: RecommendedRow[] = recommendAssortment(products, demand, 8)
+    .filter((sg) => catalog[sg.product.handle])
+    .map((sg) => ({
+      handle: sg.product.handle,
+      imageUrl: productImageSrc(sg.product.handle, sg.product.imageUrl),
+      margin: byHandle.get(sg.product.handle)?.margin ?? 0,
+      suggestedUnits: sg.suggestedUnits,
+      reasons: sg.reasons,
+    }));
 
   const avgMargin = priced.reduce((s, x) => s + x.margin, 0) / Math.max(1, priced.length);
   const inStock = priced.filter((x) => x.p.available).length;
@@ -103,20 +97,27 @@ async function Portal({ params }: { params: Params }) {
 
       <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Tile label="Your pricing" value={describeAdjustment(list.adjustment)} note={`${Object.keys(list.fixedPrices).length} fixed prices`} />
-        <Tile label="Average margin at retail price" value={`${Math.round(avgMargin * 100)}%`} />
+        <Tile label="Average margin at MSRP" value={`${Math.round(avgMargin * 100)}%`} />
         <Tile label="Products available" value={String(inStock)} note={`of ${priced.length} in the range`} />
         <Tile label="Low stock at the brand" value={String(lowStock)} note="5 units or fewer" />
       </div>
 
       <section className="mt-14">
-        <h2 className="font-display text-3xl tracking-tight text-plum-800">Recommended to stock</h2>
+        <h2 className="font-display text-3xl tracking-tight text-plum-800">Build your order</h2>
         <p className="mt-2 flex items-start gap-2 text-[14px] text-ink-muted">
           <Info size={15} className="mt-0.5 shrink-0" aria-hidden="true" />
-          Ranked by what shoppers view and add to bag on our own storefront (last 14 days) and by review rating. Quantities
-          are suggestions, capped by our live stock.
+          Start from a shelf-ready kit or our demand-based picks. Quantities are capped by our live stock.
         </p>
         <div className="mt-6">
-          <OrderBuilder rows={rows} retailer={retailer.company} currency={list.currency} />
+          <OrderBuilder
+            retailerId={retailer.id}
+            retailer={retailer.company}
+            currency={list.currency}
+            catalog={catalog}
+            kits={kits}
+            recommended={recommended}
+            canSubmit={retailer.source === "shopify" && !!retailer.shopify?.contactId}
+          />
         </div>
       </section>
 
@@ -126,9 +127,9 @@ async function Portal({ params }: { params: Params }) {
           <thead>
             <tr className="border-b border-lavender-100 text-left text-[12px] text-ink-muted">
               <th className="px-6 py-3 font-normal">Product</th>
-              <th className="px-6 py-3 text-right font-normal">Retail</th>
+              <th className="px-6 py-3 text-right font-normal">MSRP (suggested)</th>
               <th className="px-6 py-3 text-right font-normal">Your price</th>
-              <th className="px-6 py-3 text-right font-normal">Margin</th>
+              <th className="px-6 py-3 text-right font-normal">Margin at MSRP</th>
               <th className="px-6 py-3 font-normal">Availability</th>
               <th className="px-6 py-3 font-normal"><span className="sr-only">Kit</span></th>
             </tr>

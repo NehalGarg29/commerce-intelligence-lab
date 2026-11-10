@@ -43,7 +43,7 @@ async function Kit({ params }: { params: Params }) {
         <div>
           <p className="text-[11px] tracking-[0.2em] text-ink-muted">MARKETING KIT</p>
           <h1 className="mt-3 font-display text-5xl tracking-tight text-plum-800">{k.title}</h1>
-          <p className="mt-2 text-[15px] text-ink-muted">{k.brand} · Retail price {k.retailPrice}</p>
+          <p className="mt-2 text-[15px] text-ink-muted">{k.brand} · Suggested retail (MSRP) {k.retailPrice}</p>
         </div>
         <a
           href={`/api/retail/kit/${k.handle}`}
