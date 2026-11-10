@@ -276,7 +276,9 @@ export { ToolInputError };
 // JSON Schemas for the model, generated from the same Zod schemas used to validate.
 export function toolDefinitions() {
   return (Object.keys(TOOL_INPUTS) as ToolName[]).map((name) => {
-    const schema = z.toJSONSchema(TOOL_INPUTS[name]) as Record<string, unknown>;
+    // JSON round-trip: z.toJSONSchema returns non-plain objects, which can't be
+    // passed to Client Components (the API explorer) or compared reliably.
+    const schema = JSON.parse(JSON.stringify(z.toJSONSchema(TOOL_INPUTS[name]))) as Record<string, unknown>;
     delete schema.$schema;
     return { name, description: TOOL_DESCRIPTIONS[name], input_schema: schema as { type: "object" } };
   });

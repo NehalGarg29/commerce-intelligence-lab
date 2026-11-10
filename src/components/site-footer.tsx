@@ -17,6 +17,9 @@ export function SiteFooter() {
           <Link href="/shop?audience=for-her" className="hover:text-plum-700">For her</Link>
           <Link href="/shop?audience=for-him" className="hover:text-plum-700">For him</Link>
           <Link href="/shop?audience=for-couples" className="hover:text-plum-700">Couples</Link>
+          <Link href="/shop?audience=for-lgbtq" className="hover:text-plum-700">LGBTQ+</Link>
+          <Link href="/guides" className="hover:text-plum-700">Guides</Link>
+          <Link href="/agents" className="hover:text-plum-700">Agent API</Link>
         </nav>
         <div className="text-sm leading-relaxed text-ink-muted">
           <p className="text-[11px] tracking-[0.16em]">ABOUT THIS DEMO</p>

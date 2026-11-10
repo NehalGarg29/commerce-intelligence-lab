@@ -10,7 +10,8 @@
     "postinstall": "prisma generate",
     "db:migrate": "prisma migrate dev",
     "db:seed": "prisma db seed",
-    "db:studio": "prisma studio"
+    "db:studio": "prisma studio",
+    "api-key": "tsx scripts/create-api-key.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^1.7.0",
