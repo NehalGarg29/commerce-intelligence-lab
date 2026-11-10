@@ -5,6 +5,7 @@ const PRODUCT_FIELDS = `
   id handle title description vendor productType tags
   totalInventory availableForSale
   featuredImage { url }
+  images(first: 8) { nodes { url altText } }
   priceRange {
     minVariantPrice { amount }
     maxVariantPrice { amount }
@@ -31,6 +32,7 @@ type ShopifyProduct = {
   totalInventory: number | null;
   availableForSale: boolean;
   featuredImage: { url: string } | null;
+  images: { nodes: { url: string; altText: string | null }[] };
   priceRange: {
     minVariantPrice: { amount: string };
     maxVariantPrice: { amount: string };
@@ -69,6 +71,7 @@ function toProduct(p: ShopifyProduct): Product {
     available: p.availableForSale,
     totalInventory: p.totalInventory,
     imageUrl: p.featuredImage?.url ?? null,
+    images: p.images.nodes.map((i) => ({ url: i.url, alt: i.altText })),
     variants: p.variants.nodes.map((v) => ({
       id: v.id,
       title: v.title,

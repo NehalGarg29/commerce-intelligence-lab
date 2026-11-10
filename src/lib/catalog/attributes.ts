@@ -10,6 +10,8 @@ export const FEATURE_LABELS: Record<string, string> = {
   "body-safe-silicone": "Body-safe silicone",
   "water-based": "Water-based",
   "toy-safe": "Toy-safe",
+  warming: "Warming",
+  gift: "Gift-ready",
 };
 
 export function featureLabels(tags: string[], max = 2): string[] {

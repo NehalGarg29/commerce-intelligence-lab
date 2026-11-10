@@ -21,6 +21,7 @@ export type Product = {
   available: boolean;
   totalInventory: number | null;
   imageUrl: string | null;
+  images: { url: string; alt: string | null }[];
   variants: Variant[];
 };
 

@@ -4,6 +4,7 @@ import { productImageSrc } from "@/lib/catalog/local-images";
 import { featureLabels } from "@/lib/catalog/attributes";
 import { formatPrice } from "@/lib/format";
 import { ProductImage } from "./product-image";
+import { CompareToggle } from "./compare/compare-toggle";
 import type { Tone } from "./product-art";
 
 const brandTone: Record<string, Tone> = {
@@ -17,16 +18,17 @@ export function ProductCard({ product }: { product: Product }) {
   const lowStock =
     product.available && product.totalInventory !== null && product.totalInventory <= 5;
   const features = featureLabels(product.tags);
+  const imageSrc = productImageSrc(product.handle, product.imageUrl);
 
   return (
-    <article className="group h-full">
+    <article className="group relative h-full">
       <Link
         href={`/products/${product.handle}`}
         className="flex h-full flex-col rounded-2xl focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-plum-700"
       >
         <div className="relative">
           <ProductImage
-            src={productImageSrc(product.handle, product.imageUrl)}
+            src={imageSrc}
             alt={product.title}
             tone={brandTone[product.brand] ?? "plum"}
             className="aspect-square shadow-[0_1px_0_rgba(58,18,51,0.04)]"
@@ -62,6 +64,11 @@ export function ProductCard({ product }: { product: Product }) {
           </ul>
         )}
       </Link>
+      {!product.tags.includes("gift-box") && (
+        <div className="absolute right-3 top-3">
+          <CompareToggle item={{ handle: product.handle, title: product.title, imageUrl: imageSrc }} />
+        </div>
+      )}
     </article>
   );
 }

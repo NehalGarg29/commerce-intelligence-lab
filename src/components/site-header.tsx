@@ -1,5 +1,7 @@
+import { Suspense } from "react";
 import Link from "next/link";
 import { Search, ShoppingBag, User } from "lucide-react";
+import { CartBadge } from "./cart/cart-badge";
 
 const nav = [
   { label: "Shop all", href: "/shop" },
@@ -44,8 +46,11 @@ export function SiteHeader() {
             >
               <User size={20} strokeWidth={1.6} />
             </span>
-            <Link href="/cart" aria-label="Shopping bag" className="rounded-full p-3 transition hover:bg-lavender-50">
+            <Link href="/cart" aria-label="Shopping bag" className="relative rounded-full p-3 transition hover:bg-lavender-50">
               <ShoppingBag size={20} strokeWidth={1.6} />
+              <Suspense fallback={null}>
+                <CartBadge />
+              </Suspense>
             </Link>
           </div>
         </div>

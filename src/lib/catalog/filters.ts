@@ -22,6 +22,8 @@ export const FILTER_FEATURES = [
   "travel-size",
   "app-free",
   "rechargeable",
+  "warming",
+  "gift",
 ];
 
 export const SORTS = {
@@ -82,6 +84,8 @@ function matchesQuery(p: Product, q: string): boolean {
 
 export function applyFilters(products: Product[], f: ShopFilters): Product[] {
   const result = products.filter((p) => {
+    // Gift packaging is an add-on, not a product to browse (still findable by search)
+    if (p.tags.includes("gift-box") && !f.q) return false;
     if (f.q && !matchesQuery(p, f.q)) return false;
     if (f.audience && !p.tags.includes(f.audience)) return false;
     if (f.category === "care" && p.brand !== "Lumen Essentials") return false;

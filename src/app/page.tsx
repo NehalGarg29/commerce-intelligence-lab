@@ -5,6 +5,8 @@ import {
   ArrowRight,
   Feather,
   Gem,
+  Gift,
+  PenLine,
   Leaf,
   MessageSquareQuote,
   Package,
@@ -18,6 +20,8 @@ import type { Product } from "@/lib/catalog/types";
 import { slugify } from "@/lib/catalog/attributes";
 import { productImageSrc } from "@/lib/catalog/local-images";
 import { ProductCard, ProductCardSkeleton } from "@/components/product-card";
+import { RitualCard } from "@/components/rituals/ritual-card";
+import { RITUALS, resolveRitual } from "@/lib/rituals";
 
 const quickPicks = [
   { label: "New to this", href: "/shop?tag=beginner-friendly" },
@@ -109,7 +113,7 @@ async function BrandGrid() {
       {brands.map((b) => {
         const lead = products.find((p) => p.handle === b.lead);
         const src = lead ? productImageSrc(lead.handle, lead.imageUrl) : null;
-        const count = products.filter((p) => p.brand === b.name).length;
+        const count = products.filter((p) => p.brand === b.name && !p.tags.includes("gift-box")).length;
         return (
           <Link
             key={b.name}
@@ -159,6 +163,26 @@ async function AdvisorExamplePicks() {
       ))}
     </div>
   );
+}
+
+async function RitualGrid() {
+  const products = await getProducts();
+  const rituals = RITUALS.map((r) => resolveRitual(r, products)).filter((r) => r.items.length > 0);
+  return (
+    <div className="mt-8 grid gap-5 lg:grid-cols-3">
+      {rituals.map((r) => (
+        <RitualCard key={r.id} ritual={r} />
+      ))}
+    </div>
+  );
+}
+
+const GIFT_BOX = "only-for-you-gift-box";
+
+async function GiftImage() {
+  const box = (await getProducts()).find((p) => p.handle === GIFT_BOX);
+  const src = box?.imageUrl ?? "/images/gift-box.jpg";
+  return <Image src={src} alt="" fill sizes="(min-width: 768px) 50vw, 100vw" className="object-cover" />;
 }
 
 function SectionHeading({ eyebrow, title, href, linkLabel }: { eyebrow: string; title: string; href?: string; linkLabel?: string }) {
@@ -306,6 +330,17 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* ───────────── Rituals ───────────── */}
+      <section className="fx-reveal mx-auto max-w-7xl px-5 pt-20 md:px-12 md:pt-24">
+        <SectionHeading eyebrow="CURATED SETS" title="Rituals, not just products" />
+        <p className="mt-3 max-w-xl text-[15px] leading-relaxed text-ink-muted">
+          Pieces chosen to be enjoyed together, with simple steps. Add the whole ritual in one tap. Prices and stock are live.
+        </p>
+        <Suspense fallback={<div className="mt-8 h-[520px] animate-pulse rounded-3xl bg-lavender-100/50" />}>
+          <RitualGrid />
+        </Suspense>
+      </section>
+
       {/* ───────────── Advisor ───────────── */}
       <section className="fx-reveal mx-auto mt-24 max-w-7xl px-5 md:mt-28 md:px-12">
         <div className="relative border-y border-lavender-100 py-14 md:py-20">
@@ -384,28 +419,43 @@ export default async function HomePage() {
         </Suspense>
       </section>
 
-      {/* ───────────── Discreet ───────────── */}
+      {/* ───────────── Gifting + privacy ───────────── */}
       <section className="fx-reveal mx-auto mt-24 grid max-w-7xl items-center gap-10 px-5 md:mt-28 md:grid-cols-2 md:gap-14 md:px-12">
-        <div className="relative aspect-[7/5] overflow-hidden rounded-[2rem]">
-          <Image src="/images/discreet.jpg" alt="" fill sizes="(min-width: 768px) 50vw, 100vw" className="object-cover" />
+        <div className="relative aspect-[7/5] overflow-hidden rounded-[2rem] bg-lavender-50">
+          <Suspense fallback={null}>
+            <GiftImage />
+          </Suspense>
         </div>
         <div>
-          <p className="text-[11px] tracking-[0.2em] text-ink-muted">PRIVACY FIRST</p>
-          <h2 className="mt-2 font-display text-4xl tracking-tight text-plum-800 md:text-5xl">Discreet by design</h2>
-          <ul className="mt-8 space-y-5 text-[17px] leading-relaxed text-ink-muted">
+          <p className="flex items-center gap-2 text-[11px] tracking-[0.2em] text-ink-muted">
+            <Gift size={14} aria-hidden="true" /> GIFTING, PRIVATELY
+          </p>
+          <h2 className="mt-2 font-display text-4xl tracking-tight text-plum-800 md:text-5xl">
+            Only for <span className="italic">you</span>.
+          </h2>
+          <p className="mt-4 max-w-md text-[16px] leading-relaxed text-ink-muted">
+            Add our keepsake gift box to any order: tissue-wrapped, ribbon-sealed, with a card carrying your words.
+          </p>
+          <ul className="mt-7 space-y-4 text-[16px] leading-relaxed text-ink-muted">
+            <li className="flex gap-3">
+              <PenLine size={20} className="mt-1 shrink-0 text-plum-700" aria-hidden="true" />
+              A personal note, printed on the card. No prices inside.
+            </li>
             <li className="flex gap-3">
               <Package size={20} className="mt-1 shrink-0 text-plum-700" aria-hidden="true" />
-              Plain, unbranded packaging with a neutral sender name.
+              Ships inside a plain outer box with a neutral sender name.
             </li>
             <li className="flex gap-3">
               <ShieldCheck size={20} className="mt-1 shrink-0 text-plum-700" aria-hidden="true" />
-              Advisor conversations are not saved, and you can clear them anytime.
-            </li>
-            <li className="flex gap-3">
-              <Sparkles size={20} className="mt-1 shrink-0 text-plum-700" aria-hidden="true" />
-              No account needed to browse or get recommendations.
+              No account needed, and advisor conversations are never saved.
             </li>
           </ul>
+          <Link
+            href={`/products/${GIFT_BOX}`}
+            className="mt-9 inline-flex h-12 items-center gap-2 rounded-full bg-plum-700 px-7 font-medium text-white transition hover:-translate-y-0.5 hover:bg-plum-800"
+          >
+            <Gift size={16} aria-hidden="true" /> Choose a gift box
+          </Link>
         </div>
       </section>
     </main>
