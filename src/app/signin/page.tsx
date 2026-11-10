@@ -14,33 +14,29 @@ const one = (v: string | string[] | undefined) => (Array.isArray(v) ? v[0] : v);
 
 function PersonaButton({
   persona,
-  next,
   icon: Icon,
   title,
   sub,
   access,
 }: {
   persona: string;
-  next: string;
   icon: typeof Building2;
   title: string;
   sub: string;
   access: string;
 }) {
   return (
-    <form action={signInAction}>
-      <input type="hidden" name="persona" value={persona} />
-      <input type="hidden" name="next" value={next} />
-      <button
-        type="submit"
-        className="group flex h-full w-full flex-col rounded-3xl border border-lavender-100 bg-white p-6 text-left transition hover:-translate-y-0.5 hover:border-mauve-400/60 hover:shadow-[0_12px_30px_-18px_rgba(46,15,41,0.35)]"
-      >
-        <Icon size={22} className="text-plum-700" aria-hidden="true" />
-        <span className="mt-4 font-display text-xl text-ink group-hover:text-plum-700">{title}</span>
-        <span className="mt-1 text-[13px] text-ink-muted">{sub}</span>
-        <span className="mt-4 rounded-2xl bg-lavender-50 px-3 py-2 text-[12px] leading-relaxed text-plum-800">{access}</span>
-      </button>
-    </form>
+    <button
+      type="submit"
+      name="persona"
+      value={persona}
+      className="group flex h-full w-full flex-col rounded-3xl border border-lavender-100 bg-white p-6 text-left transition hover:-translate-y-0.5 hover:border-mauve-400/60 hover:shadow-[0_12px_30px_-18px_rgba(46,15,41,0.35)]"
+    >
+      <Icon size={22} className="text-plum-700" aria-hidden="true" />
+      <span className="mt-4 font-display text-xl text-ink group-hover:text-plum-700">{title}</span>
+      <span className="mt-1 text-[13px] text-ink-muted">{sub}</span>
+      <span className="mt-4 rounded-2xl bg-lavender-50 px-3 py-2 text-[12px] leading-relaxed text-plum-800">{access}</span>
+    </button>
   );
 }
 
@@ -48,6 +44,8 @@ async function SignIn({ searchParams }: { searchParams: SearchParams }) {
   const sp = await searchParams;
   const next = safeNext(one(sp.next), "/");
   const denied = one(sp.denied) === "1";
+  const badCode = one(sp.code) === "invalid";
+  const needsCode = Boolean(process.env.DEMO_ACCESS_CODE);
   const [session, { retailers, source }] = await Promise.all([getSession(), listRetailers()]);
 
   return (
@@ -69,12 +67,27 @@ async function SignIn({ searchParams }: { searchParams: SearchParams }) {
         </div>
       )}
 
+      <form action={signInAction}>
+      <input type="hidden" name="next" value={next} />
+      {needsCode && (
+        <div className="mt-8 max-w-sm">
+          <label htmlFor="code" className="text-[11px] tracking-[0.2em] text-ink-muted">DEMO ACCESS CODE</label>
+          <input
+            id="code"
+            name="code"
+            type="password"
+            autoComplete="off"
+            required
+            className="mt-2 h-11 w-full rounded-xl border border-lavender-100 bg-white px-3 text-[15px] outline-none focus:border-mauve-400"
+          />
+          {badCode && <p role="alert" className="mt-2 text-[13px] text-[#8A4B0F]">That code isn&apos;t right. Ask the person who shared this demo.</p>}
+        </div>
+      )}
       <section className="mt-10">
         <h2 className="text-[11px] tracking-[0.2em] text-ink-muted">BRAND STAFF</h2>
         <div className="mt-4 grid gap-4 md:grid-cols-3">
           <PersonaButton
             persona="merchant"
-            next={next}
             icon={BarChart3}
             title="Merchant team"
             sub="Brand e-commerce, sales and operations"
@@ -92,7 +105,6 @@ async function SignIn({ searchParams }: { searchParams: SearchParams }) {
             <PersonaButton
               key={r.id}
               persona={`retailer:${r.id}`}
-              next={next}
               icon={Building2}
               title={`Buyer at ${r.company}`}
               sub={`${r.location}${r.city ? ` · ${r.city}` : ""}`}
@@ -101,6 +113,8 @@ async function SignIn({ searchParams }: { searchParams: SearchParams }) {
           ))}
         </div>
       </section>
+
+      </form>
 
       <section className="mt-10 rounded-3xl bg-lavender-50 p-6">
         <p className="flex items-center gap-2 font-display text-lg text-ink">
