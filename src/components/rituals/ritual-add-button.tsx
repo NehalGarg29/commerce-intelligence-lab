@@ -1,15 +1,19 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
 import Link from "next/link";
 import { Check, ShoppingBag } from "lucide-react";
 import { addRitualAction, type AddToBagState } from "@/app/actions/cart";
 import { formatPrice } from "@/lib/format";
+import { track } from "@/lib/analytics/track";
 
 const initial: AddToBagState = { status: "idle", message: "" };
 
 export function RitualAddButton({ ritualId, total, disabled }: { ritualId: string; total: number; disabled: boolean }) {
   const [state, action, pending] = useActionState(addRitualAction, initial);
+  useEffect(() => {
+    if (state.status === "added") track("add_to_cart", { source: "ritual" });
+  }, [state]);
   return (
     <div>
       <form action={action}>

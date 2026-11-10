@@ -8,6 +8,7 @@ import { productImageSrc } from "@/lib/catalog/local-images";
 import { formatPrice } from "@/lib/format";
 import { removeLineAction, updateLineAction } from "@/app/actions/cart";
 import { AskAdvisorButton } from "@/components/advisor/ask-advisor-button";
+import { CheckoutLink } from "@/components/analytics/checkout-link";
 
 export const metadata: Metadata = { title: "Your bag · Lumen Atelier" };
 
@@ -91,12 +92,12 @@ async function CartView() {
           <div className="flex justify-between"><dt className="text-ink-muted">Subtotal</dt><dd>{formatPrice(cart.subtotal)}</dd></div>
           <div className="flex justify-between"><dt className="text-ink-muted">Shipping and taxes</dt><dd className="text-ink-muted">At checkout</dd></div>
         </dl>
-        <a
+        <CheckoutLink
           href={cart.checkoutUrl}
           className="mt-7 flex h-14 items-center justify-center gap-2 rounded-full bg-plum-700 font-medium text-white transition hover:bg-plum-800"
         >
           <Lock size={16} aria-hidden="true" /> Checkout securely
-        </a>
+        </CheckoutLink>
         {!cart.lines.some((l) => l.product.handle === "only-for-you-gift-box") && (
           <Link
             href="/products/only-for-you-gift-box"

@@ -1,12 +1,13 @@
 "use client";
 
-import { useActionState, useMemo, useState } from "react";
+import { useActionState, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { Check, Minus, Plus, ShoppingBag } from "lucide-react";
 import type { Variant } from "@/lib/catalog/types";
 import { formatPrice } from "@/lib/format";
 import { SWATCHES } from "@/lib/catalog/compatibility";
 import { addToBagAction, type AddToBagState } from "@/app/actions/cart";
+import { track } from "@/lib/analytics/track";
 
 const initial: AddToBagState = { status: "idle", message: "" };
 
@@ -16,12 +17,15 @@ function stockLine(v: Variant): { text: string; tone: string } {
   return { text: "In stock · ships in plain packaging", tone: "text-[#2F6B45]" };
 }
 
-export function ProductPurchase({ variants, giftNote = false }: { variants: Variant[]; giftNote?: boolean }) {
+export function ProductPurchase({ handle, variants, giftNote = false }: { handle: string; variants: Variant[]; giftNote?: boolean }) {
   const firstAvailable = variants.find((v) => v.available) ?? variants[0];
   const [variantId, setVariantId] = useState(firstAvailable.id);
   const [qty, setQty] = useState(1);
   const [note, setNote] = useState("");
   const [state, formAction, pending] = useActionState(addToBagAction, initial);
+  useEffect(() => {
+    if (state.status === "added") track("add_to_cart", { productHandle: handle, source: "product_page" });
+  }, [state, handle]);
 
   const variant = variants.find((v) => v.id === variantId) ?? firstAvailable;
   const hasOptions = !(variants.length === 1 && variant.title === "Default Title");

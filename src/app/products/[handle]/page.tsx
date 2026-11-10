@@ -20,6 +20,7 @@ import { HowToUse } from "@/components/guides/how-to-use";
 import { guideFor } from "@/lib/guides";
 import { ReviewsSection, ReviewsSkeleton } from "@/components/reviews/reviews-section";
 import { RatingInline } from "@/components/reviews/stars";
+import { TrackProductView } from "@/components/analytics/track-view";
 
 type Params = Promise<{ handle: string }>;
 
@@ -135,6 +136,7 @@ async function ProductView({ params }: { params: Params }) {
 
   return (
     <>
+      <TrackProductView handle={product.handle} />
       <nav aria-label="Breadcrumb" className="text-[13px] text-ink-muted">
         <Link href="/" className="hover:text-plum-700">Home</Link> <span aria-hidden="true">/</span>{" "}
         <Link href="/shop" className="hover:text-plum-700">Shop</Link> <span aria-hidden="true">/</span>{" "}
@@ -164,7 +166,7 @@ async function ProductView({ params }: { params: Params }) {
             )}
           </div>
 
-          <ProductPurchase variants={product.variants} giftNote={product.tags.includes("gift-box")} />
+          <ProductPurchase handle={product.handle} variants={product.variants} giftNote={product.tags.includes("gift-box")} />
 
           {!product.tags.includes("gift-box") && (
             <div className="-mt-3">

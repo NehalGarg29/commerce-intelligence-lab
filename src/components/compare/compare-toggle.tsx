@@ -2,6 +2,7 @@
 
 import { Check, Plus } from "lucide-react";
 import { useCompare, type CompareItem } from "@/lib/compare-store";
+import { track } from "@/lib/analytics/track";
 
 export function CompareToggle({ item, variant = "card" }: { item: CompareItem; variant?: "card" | "inline" }) {
   const { has, isFull, toggle } = useCompare();
@@ -12,7 +13,10 @@ export function CompareToggle({ item, variant = "card" }: { item: CompareItem; v
   return (
     <button
       type="button"
-      onClick={() => toggle(item)}
+      onClick={() => {
+        if (!has(item.handle) && !isFull) track("compare_add", { productHandle: item.handle });
+        toggle(item);
+      }}
       disabled={disabled}
       aria-pressed={selected}
       aria-label={`${selected ? "Remove" : "Add"} ${item.title} ${selected ? "from" : "to"} comparison`}

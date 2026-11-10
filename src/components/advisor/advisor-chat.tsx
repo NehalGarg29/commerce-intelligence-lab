@@ -7,6 +7,7 @@ import { ArrowUp, Info, ShieldCheck, ShoppingBag, Sparkles, Star, TriangleAlert,
 import { addAdvisorBagAction, type AddToBagState } from "@/app/actions/cart";
 import type { AdvisorReply, ChatTurn, TraceStep } from "@/lib/advisor/types";
 import { formatPrice } from "@/lib/format";
+import { track } from "@/lib/analytics/track";
 
 type Turn =
   | { role: "user"; content: string }
@@ -75,6 +76,9 @@ function Trace({ steps, latencyMs }: { steps: TraceStep[]; latencyMs: number }) 
 function CartProposalBox({ reply }: { reply: AdvisorReply }) {
   const [state, action, pending] = useActionState<AddToBagState, FormData>(addAdvisorBagAction, { status: "idle", message: "" });
   const cart = reply.cart;
+  useEffect(() => {
+    if (state.status === "added") track("add_to_cart", { source: "advisor", count: Math.min(cart?.lines.length ?? 1, 20) });
+  }, [state, cart]);
   if (!cart) return null;
   const lines = cart.lines.map((l) => ({ variantId: l.variantId, quantity: l.quantity }));
 
@@ -134,7 +138,10 @@ function AssistantTurn({ reply, compact, onNavigate }: { reply: AdvisorReply; co
             <li key={r.handle}>
               <Link
                 href={`/products/${r.handle}`}
-                onClick={onNavigate}
+                onClick={() => {
+                  track("advisor_click", { productHandle: r.handle });
+                  onNavigate?.();
+                }}
                 className={`group flex h-full overflow-hidden rounded-2xl border ${compact ? "" : "sm:flex-col"} border-lavender-100 bg-white transition hover:-translate-y-0.5 hover:shadow-[0_12px_30px_-18px_rgba(46,15,41,0.35)]`}
               >
                 <div className={`relative w-28 shrink-0 bg-lavender-50 ${compact ? "" : "sm:aspect-[4/3] sm:w-auto"}`}>
@@ -203,6 +210,7 @@ export function useAdvisorConversation(): AdvisorConversation {
     const message = text.trim().slice(0, 500);
     if (!message || pendingRef.current) return;
     pendingRef.current = true;
+    track("advisor_query");
     const history: ChatTurn[] = turnsRef.current
       .flatMap((t): ChatTurn[] =>
         t.role === "user"

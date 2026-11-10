@@ -1,7 +1,8 @@
 import { Suspense } from "react";
 import Link from "next/link";
-import { Search, ShoppingBag, User } from "lucide-react";
+import { Search, ShoppingBag } from "lucide-react";
 import { CartBadge } from "./cart/cart-badge";
+import { AccountMenu } from "./auth/account-menu";
 
 const nav = [
   { label: "Shop all", href: "/shop" },
@@ -37,14 +38,9 @@ export function SiteHeader() {
             <Link href="/shop" aria-label="Search products" className="rounded-full p-3 transition hover:bg-lavender-50">
               <Search size={20} strokeWidth={1.6} />
             </Link>
-            <span
-              className="hidden rounded-full p-3 text-ink-muted/60 sm:inline-flex"
-              role="img"
-              aria-label="Customer accounts are not part of this demo"
-              title="Customer accounts are not part of this demo"
-            >
-              <User size={20} strokeWidth={1.6} />
-            </span>
+            <Suspense fallback={<span className="inline-block w-11" />}>
+              <AccountMenu />
+            </Suspense>
             <Link href="/cart" aria-label="Shopping bag" className="relative rounded-full p-3 transition hover:bg-lavender-50">
               <ShoppingBag size={20} strokeWidth={1.6} />
               <Suspense fallback={null}>

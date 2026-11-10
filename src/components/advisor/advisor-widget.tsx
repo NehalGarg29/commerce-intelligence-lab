@@ -7,6 +7,7 @@ import { Maximize2, Sparkles, X } from "lucide-react";
 import { useCompare } from "@/lib/compare-store";
 import { OPEN_ADVISOR_EVENT, type OpenAdvisorDetail } from "@/lib/advisor/open";
 import { AdvisorChat, useAdvisorConversation } from "./advisor-chat";
+import { track } from "@/lib/analytics/track";
 
 // Site-wide chat bubble. It lives in the root layout, so the conversation
 // survives navigation: ask, open a recommended product, come back.
@@ -25,6 +26,7 @@ export function AdvisorWidget() {
   // Any "Ask the advisor" button on the site opens the widget (optionally with a question).
   useEffect(() => {
     const onOpen = (e: Event) => {
+      track("advisor_open");
       setOpen(true);
       const prompt = (e as CustomEvent<OpenAdvisorDetail>).detail?.prompt;
       if (prompt) askRef.current(prompt);
@@ -107,7 +109,10 @@ export function AdvisorWidget() {
       {!open && (
         <button
           type="button"
-          onClick={() => setOpen(true)}
+          onClick={() => {
+            track("advisor_open");
+            setOpen(true);
+          }}
           aria-label="Open the AI shopping advisor"
           className={`fixed right-4 z-[55] flex h-14 items-center gap-2.5 rounded-full bg-plum-800 pl-4 pr-5 text-ivory shadow-[0_16px_40px_-12px_rgba(46,15,41,0.6)] transition hover:-translate-y-0.5 hover:bg-plum-700 sm:right-6 ${
             lifted ? "bottom-24 sm:bottom-28" : "bottom-4 sm:bottom-6"
