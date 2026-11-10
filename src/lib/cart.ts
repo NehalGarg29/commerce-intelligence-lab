@@ -7,6 +7,7 @@ import { shopifyFetch } from "@/lib/shopify";
 
 const CART_COOKIE = "cart_id";
 export const GIFT_NOTE_KEY = "Gift note";
+export const BUNDLE_KEY = "Ritual bundle";
 
 export type NewLine = { merchandiseId: string; quantity: number; attributes?: { key: string; value: string }[] };
 
@@ -19,6 +20,7 @@ export type CartLine = {
   lineTotal: number;
   quantityAvailable: number | null;
   giftNote: string | null;
+  bundle: string | null; // "Ritual bundle" attribute, if added as part of a bundle
   product: { handle: string; title: string; brand: string; imageUrl: string | null };
 };
 
@@ -27,12 +29,15 @@ export type Cart = {
   checkoutUrl: string;
   totalQuantity: number;
   subtotal: number;
+  total: number; // after discount codes
+  discountCodes: { code: string; applicable: boolean }[];
   lines: CartLine[];
 };
 
 const CART_FIELDS = `
   id checkoutUrl totalQuantity
-  cost { subtotalAmount { amount } }
+  cost { subtotalAmount { amount } totalAmount { amount } }
+  discountCodes { code applicable }
   lines(first: 50) {
     nodes {
       id quantity
@@ -53,7 +58,8 @@ type ShopifyCart = {
   id: string;
   checkoutUrl: string;
   totalQuantity: number;
-  cost: { subtotalAmount: { amount: string } };
+  cost: { subtotalAmount: { amount: string }; totalAmount: { amount: string } };
+  discountCodes: { code: string; applicable: boolean }[];
   lines: {
     nodes: {
       id: string;
@@ -79,6 +85,8 @@ function toCart(c: ShopifyCart): Cart {
     checkoutUrl: c.checkoutUrl,
     totalQuantity: c.totalQuantity,
     subtotal: Number(c.cost.subtotalAmount.amount),
+    total: Number(c.cost.totalAmount.amount),
+    discountCodes: c.discountCodes,
     lines: c.lines.nodes.map((l) => ({
       id: l.id,
       quantity: l.quantity,
@@ -88,6 +96,7 @@ function toCart(c: ShopifyCart): Cart {
       lineTotal: Number(l.cost.totalAmount.amount),
       quantityAvailable: l.merchandise.quantityAvailable,
       giftNote: l.attributes.find((a) => a.key === GIFT_NOTE_KEY)?.value ?? null,
+      bundle: l.attributes.find((a) => a.key === BUNDLE_KEY)?.value ?? null,
       product: {
         handle: l.merchandise.product.handle,
         title: l.merchandise.product.title,
@@ -201,4 +210,19 @@ export async function createAgentCart(lines: NewLine[], agentName: string): Prom
   );
   const cart = unwrap(data.cartCreate);
   return { checkoutUrl: cart.checkoutUrl, totalQuantity: cart.totalQuantity };
+}
+
+// Adds a discount code to the visitor's cart, keeping any codes already there.
+// Shopify decides whether it applies (minimums, eligibility), not us.
+export async function applyDiscountCode(code: string): Promise<Cart> {
+  const cart = await getCart();
+  if (!cart) throw new CartError("Your bag is empty.");
+  const codes = [...new Set([...cart.discountCodes.map((d) => d.code), code])];
+  const data = await shopifyFetch<{ cartDiscountCodesUpdate: CartPayload }>(
+    `mutation Codes($cartId: ID!, $codes: [String!]) {
+      cartDiscountCodesUpdate(cartId: $cartId, discountCodes: $codes) { cart { ${CART_FIELDS} } userErrors { message } }
+    }`,
+    { cartId: cart.id, codes }
+  );
+  return unwrap(data.cartDiscountCodesUpdate);
 }

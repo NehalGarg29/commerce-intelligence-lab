@@ -342,6 +342,18 @@ export default async function HomePage() {
         <Suspense fallback={<div className="mt-8 h-[520px] animate-pulse rounded-3xl bg-lavender-100/50" />}>
           <RitualGrid />
         </Suspense>
+        <Link
+          href="/rituals/build"
+          className="group mt-6 flex flex-wrap items-center justify-between gap-4 rounded-3xl border border-lavender-100 bg-white px-7 py-6 transition hover:border-mauve-400/60"
+        >
+          <span>
+            <span className="block font-display text-2xl text-plum-800">Build your own ritual</span>
+            <span className="mt-1 block text-[14px] text-ink-muted">Pick a device, a glide that&apos;s safe with it and an extra. Save 10% on the set.</span>
+          </span>
+          <span className="inline-flex h-11 items-center gap-2 rounded-full bg-plum-700 px-6 text-sm font-medium text-white">
+            Start building <ArrowRight size={15} className="transition group-hover:translate-x-0.5" aria-hidden="true" />
+          </span>
+        </Link>
       </section>
 
       {/* ───────────── Advisor ───────────── */}

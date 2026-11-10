@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { Gift, Lock, Minus, Package, PenLine, Plus, X } from "lucide-react";
+import { Gift, Lock, Minus, Package, PenLine, Plus, X, Sparkles } from "lucide-react";
 import { getCart } from "@/lib/cart";
 import { productImageSrc } from "@/lib/catalog/local-images";
 import { formatPrice } from "@/lib/format";
@@ -47,6 +47,11 @@ async function CartView() {
                       {line.product.title}
                     </Link>
                     {line.variantTitle !== "Default Title" && <p className="text-sm text-ink-muted">{line.variantTitle}</p>}
+                    {line.bundle && (
+                      <p className="mt-1.5 inline-flex items-center gap-1 rounded-full bg-lavender-50 px-2.5 py-0.5 text-[11px] text-plum-800">
+                        <Sparkles size={11} aria-hidden="true" /> Ritual bundle
+                      </p>
+                    )}
                     {line.giftNote && (
                       <p className="mt-2 flex items-start gap-1.5 rounded-xl bg-lavender-50 px-3 py-2 text-[13px] italic text-plum-800">
                         <PenLine size={13} className="mt-0.5 shrink-0 not-italic" aria-hidden="true" /> “{line.giftNote}”
@@ -90,6 +95,12 @@ async function CartView() {
         <h2 className="font-display text-2xl text-plum-800">Summary</h2>
         <dl className="mt-6 space-y-3 text-[15px]">
           <div className="flex justify-between"><dt className="text-ink-muted">Subtotal</dt><dd>{formatPrice(cart.subtotal)}</dd></div>
+          {cart.discountCodes.filter((d) => d.applicable).map((d) => (
+            <div key={d.code} className="flex justify-between text-[#2F5D36]">
+              <dt>Discount · {d.code}</dt>
+              <dd>{cart.total < cart.subtotal ? `−${formatPrice(Math.round((cart.subtotal - cart.total) * 100) / 100)}` : "Applied"}</dd>
+            </div>
+          ))}
           <div className="flex justify-between"><dt className="text-ink-muted">Shipping and taxes</dt><dd className="text-ink-muted">At checkout</dd></div>
         </dl>
         <CheckoutLink

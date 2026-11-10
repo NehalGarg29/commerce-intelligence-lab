@@ -21,6 +21,7 @@ import { guideFor } from "@/lib/guides";
 import { ReviewsSection, ReviewsSkeleton } from "@/components/reviews/reviews-section";
 import { RatingInline } from "@/components/reviews/stars";
 import { TrackProductView } from "@/components/analytics/track-view";
+import { slotFor } from "@/lib/bundle";
 
 type Params = Promise<{ handle: string }>;
 
@@ -184,6 +185,18 @@ async function ProductView({ params }: { params: Params }) {
           </ul>
 
           <PairingCard product={product} all={all} />
+          {slotFor(product) === "device" && (
+            <Link
+              href={`/rituals/build?device=${product.handle}`}
+              className="flex items-center justify-between gap-3 rounded-2xl bg-lavender-50 px-5 py-4 text-[14px] text-plum-800 transition hover:bg-lavender-100"
+            >
+              <span>
+                <span className="font-medium">Build a ritual with {product.title}</span>
+                <span className="block text-[13px] text-ink-muted">Add a safe glide and an extra, save 10%</span>
+              </span>
+              <Sparkles size={18} aria-hidden="true" />
+            </Link>
+          )}
           <Details product={product} />
         </div>
       </div>

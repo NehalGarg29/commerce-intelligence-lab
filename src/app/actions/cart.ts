@@ -1,7 +1,8 @@
 "use server";
 
 import { refresh } from "next/cache";
-import { addLines, CartError, GIFT_NOTE_KEY, removeLine, updateLine } from "@/lib/cart";
+import { addLines, applyDiscountCode, BUNDLE_KEY, CartError, GIFT_NOTE_KEY, removeLine, updateLine } from "@/lib/cart";
+import { BUNDLE_CODE, BUNDLE_DISCOUNT_PCT, validateBundle } from "@/lib/bundle";
 import { getProducts } from "@/lib/catalog";
 import { RITUALS, RITUAL_IDS, resolveRitual } from "@/lib/rituals";
 
@@ -116,6 +117,51 @@ export async function addAdvisorBagAction(_prev: AddToBagState, formData: FormDa
     await addLines(lines);
     refresh();
     return { status: "added", message: `${lines.length} ${lines.length === 1 ? "item" : "items"} added to your bag.` };
+  } catch (e) {
+    return { status: "error", message: e instanceof CartError ? e.message : "Could not reach the store. Please try again." };
+  }
+}
+
+export type BundleState = { status: "idle" | "added" | "error"; message: string; discountApplied?: boolean };
+
+// Build-your-ritual: re-validates the three picks on the server (slots, stock,
+// compatibility), adds them as one tagged bundle, then asks Shopify to apply
+// the bundle discount code. Shopify is the source of truth for the discount.
+export async function addBundleAction(_prev: BundleState, formData: FormData): Promise<BundleState> {
+  const HANDLE = /^[a-z0-9-]{1,80}$/;
+  const picks = {
+    device: String(formData.get("device") ?? ""),
+    care: String(formData.get("care") ?? ""),
+    extra: String(formData.get("extra") ?? ""),
+  };
+  if (!Object.values(picks).every((h) => HANDLE.test(h))) return { status: "error", message: "Pick one item for each step." };
+
+  const check = validateBundle(await getProducts(), picks);
+  if (!check.ok) return { status: "error", message: check.error };
+
+  const bundleId = `${picks.device}+${picks.care}+${picks.extra}`.slice(0, 120);
+  const lines = [check.device, check.care, check.extra].map((p) => ({
+    merchandiseId: (p.variants.find((v) => v.available) ?? p.variants[0]).id,
+    quantity: 1,
+    attributes: [{ key: BUNDLE_KEY, value: bundleId }],
+  }));
+  try {
+    await addLines(lines);
+    let discountApplied = false;
+    try {
+      const cart = await applyDiscountCode(BUNDLE_CODE);
+      discountApplied = cart.discountCodes.some((d) => d.code.toUpperCase() === BUNDLE_CODE && d.applicable);
+    } catch {
+      // The bundle is in the bag either way; the discount is a bonus.
+    }
+    refresh();
+    return {
+      status: "added",
+      discountApplied,
+      message: discountApplied
+        ? `Your ritual is in the bag with ${BUNDLE_DISCOUNT_PCT}% off.`
+        : "Your ritual is in the bag. The bundle discount isn't active in this store yet.",
+    };
   } catch (e) {
     return { status: "error", message: e instanceof CartError ? e.message : "Could not reach the store. Please try again." };
   }
