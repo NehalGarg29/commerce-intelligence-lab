@@ -1,0 +1,68 @@
+// Postgres holds the "intelligence" data only. Shopify stays the source of
+// truth for products, prices, stock and carts, so every row here points at a
+// Shopify product by its handle instead of copying product data.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// Fictional demo reviews. `themes` are labels attached at write time
+// (e.g. "quiet", "battery"), so theme counts are plain, deterministic SQL.
+model Review {
+  id            String   @id @default(cuid())
+  productHandle String
+  rating        Int // 1-5, enforced in app code and by the seed
+  title         String
+  body          String
+  authorName    String
+  verified      Boolean  @default(false)
+  themes        String[]
+  isDemo        Boolean  @default(true)
+  createdAt     DateTime @default(now())
+
+  @@index([productHandle])
+  @@index([productHandle, rating])
+}
+
+// Storefront and advisor events for the funnel (view -> add to bag -> checkout).
+model Event {
+  id            String   @id @default(cuid())
+  type          String // product_view | add_to_cart | compare | advisor_query | checkout_start ...
+  sessionId     String
+  productHandle String?
+  metadata      Json?
+  createdAt     DateTime @default(now())
+
+  @@index([type, createdAt])
+  @@index([productHandle])
+}
+
+// One row per advisor answer: the question, every tool call it made and
+// whether the AI or the deterministic fallback produced it.
+model AdvisorRun {
+  id        String   @id @default(cuid())
+  query     String
+  mode      String // "ai" | "fallback"
+  toolTrace Json
+  answer    String
+  latencyMs Int
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+}
+
+// Keys for the external agent API. Only a SHA-256 hash is stored, never the key.
+model ApiKey {
+  id         String    @id @default(cuid())
+  name       String
+  keyHash    String    @unique
+  prefix     String // first characters, shown in the UI so keys can be told apart
+  createdAt  DateTime  @default(now())
+  lastUsedAt DateTime?
+  revokedAt  DateTime?
+}
