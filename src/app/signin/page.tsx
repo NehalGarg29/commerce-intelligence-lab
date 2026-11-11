@@ -91,7 +91,7 @@ async function SignIn({ searchParams }: { searchParams: SearchParams }) {
             icon={BarChart3}
             title="Merchant team"
             sub="Brand e-commerce, sales and operations"
-            access="Insights · every retail partner · marketing kits"
+            access="Insights · ERP sync · every retail partner · marketing kits"
           />
         </div>
       </section>
