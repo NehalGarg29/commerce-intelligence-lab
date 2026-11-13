@@ -28,7 +28,7 @@ export function ApiExplorer({ tools }: { tools: ToolDoc[] }) {
 
   const origin = typeof window === "undefined" ? "" : window.location.origin;
   const curl = `curl -X POST ${origin}/api/agent/v1/tools/${selected} \\
-  -H "Authorization: Bearer $LUMEN_API_KEY" \\
+  -H "Authorization: Bearer $AFTERGLOW_API_KEY" \\
   -H "Content-Type: application/json" \\
   -d '${JSON.stringify(JSON.parse(bodyValid ? body : "{}"))}'`;
 

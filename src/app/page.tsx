@@ -231,7 +231,7 @@ export default async function HomePage() {
         <div className="mx-auto w-full max-w-7xl px-5 pb-14 pt-40 md:px-12 md:py-32">
           <div className="max-w-xl">
             <p className="fx-fade-up text-[11px] tracking-[0.26em] text-lavender-100 md:text-[12px]">
-              THE LUMEN ATELIER COLLECTION
+              THE AFTERGLOW COLLECTION
             </p>
             <h1 className="fx-fade-up fx-delay-1 mt-5 font-display text-[44px] leading-[1.02] tracking-tight text-ivory sm:text-6xl md:text-7xl">
               Intimate wellness,
