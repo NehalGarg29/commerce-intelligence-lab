@@ -15,7 +15,7 @@ import { themeVerdict } from "@/lib/reviews/analyze";
 import { RatingInline } from "@/components/reviews/stars";
 import { AskAdvisorButton } from "@/components/advisor/ask-advisor-button";
 
-export const metadata: Metadata = { title: "Compare · Lumen Atelier" };
+export const metadata: Metadata = { title: "Compare · Afterglow" };
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
 

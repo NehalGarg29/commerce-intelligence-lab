@@ -23,7 +23,7 @@ import { StockTable, type StockRowView } from "@/components/erp/stock-table";
 import { SubmitButton } from "@/components/erp/submit-button";
 
 export const metadata: Metadata = {
-  title: "ERP sync · Lumen Atelier",
+  title: "ERP sync · Afterglow",
   robots: { index: false, follow: false },
 };
 

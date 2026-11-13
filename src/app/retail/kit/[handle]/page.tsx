@@ -12,7 +12,7 @@ import { requireSignedIn } from "@/lib/auth/session";
 
 type Params = Promise<{ handle: string }>;
 
-export const metadata: Metadata = { title: "Marketing kit · Lumen Atelier", robots: { index: false, follow: false } };
+export const metadata: Metadata = { title: "Marketing kit · Afterglow", robots: { index: false, follow: false } };
 
 function Block({ title, copy, children }: { title: string; copy?: string; children: React.ReactNode }) {
   return (

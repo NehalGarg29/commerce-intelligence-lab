@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { AdvisorPageChat } from "@/components/advisor/advisor-page-chat";
 
 export const metadata: Metadata = {
-  title: "Advisor · Lumen Atelier",
+  title: "Advisor · Afterglow",
   description: "A shopping advisor that checks live stock, demo reviews and store rules before it recommends anything.",
 };
 

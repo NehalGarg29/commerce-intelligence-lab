@@ -57,13 +57,22 @@ type ShopifyCollection = {
   image: { url: string; altText: string | null } | null;
 };
 
+// The store was renamed from Lumen Atelier to Afterglow. Shopify's vendor field
+// may still hold the old names, so map them here: everything downstream
+// (filters, compatibility, advisor) only ever sees the new brand names.
+const BRAND_ALIASES: Record<string, string> = {
+  "Lumen Atelier": "Afterglow",
+  "Lumen Essentials": "Afterglow Essentials",
+};
+const brandName = (vendor: string) => BRAND_ALIASES[vendor] ?? vendor;
+
 function toProduct(p: ShopifyProduct): Product {
   return {
     id: p.id,
     handle: p.handle,
     title: p.title,
     description: p.description,
-    brand: p.vendor,
+    brand: brandName(p.vendor),
     type: p.productType,
     tags: p.tags,
     priceMin: Number(p.priceRange.minVariantPrice.amount),

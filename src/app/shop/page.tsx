@@ -23,7 +23,7 @@ import { SortSelect } from "@/components/shop/sort-select";
 import { AskAdvisorButton } from "@/components/advisor/ask-advisor-button";
 
 export const metadata: Metadata = {
-  title: "Shop · Lumen Atelier",
+  title: "Shop · Afterglow",
   description: "Browse the full collection with live prices and stock.",
 };
 

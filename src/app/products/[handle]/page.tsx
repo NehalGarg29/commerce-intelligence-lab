@@ -28,8 +28,8 @@ type Params = Promise<{ handle: string }>;
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const product = await getProduct((await params).handle);
   return product
-    ? { title: `${product.title} · Lumen Atelier`, description: product.description.slice(0, 155) }
-    : { title: "Product not found · Lumen Atelier" };
+    ? { title: `${product.title} · Afterglow`, description: product.description.slice(0, 155) }
+    : { title: "Product not found · Afterglow" };
 }
 
 const AUDIENCE_TAGS = ["for-her", "for-him", "for-couples"];
@@ -37,7 +37,7 @@ const AUDIENCE_TAGS = ["for-her", "for-him", "for-couples"];
 function related(product: Product, all: Product[]): Product[] {
   const audiences = product.tags.filter((t) => AUDIENCE_TAGS.includes(t));
   return all
-    .filter((p) => p.handle !== product.handle && p.brand !== "Lumen Essentials" && !p.tags.includes("gift-box"))
+    .filter((p) => p.handle !== product.handle && p.brand !== "Afterglow Essentials" && !p.tags.includes("gift-box"))
     .filter((p) => p.brand === product.brand || p.tags.some((t) => audiences.includes(t)))
     .sort((a, b) => Number(b.available) - Number(a.available))
     .slice(0, 4);

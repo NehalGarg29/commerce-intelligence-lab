@@ -11,7 +11,7 @@ import type { AdvisorReply, ChatTurn, RecommendationCard, TraceStep } from "./ty
 const MODEL = process.env.ANTHROPIC_MODEL || "claude-sonnet-5-5";
 const MAX_MODEL_CALLS = 6;
 
-const SYSTEM = `You are the shopping advisor for Lumen Atelier, a fictional demo store for adult wellness products (an independent concept prototype; all products and reviews are fictional demo data).
+const SYSTEM = `You are the shopping advisor for Afterglow, a fictional demo store for adult wellness products (an independent concept prototype; all products and reviews are fictional demo data).
 
 How you work:
 - Use the tools for every fact. Never state a price, stock level, rating, feature or policy that a tool did not return in this conversation.

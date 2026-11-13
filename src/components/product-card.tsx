@@ -9,10 +9,10 @@ import { CompareToggle } from "./compare/compare-toggle";
 import type { Tone } from "./product-art";
 
 const brandTone: Record<string, Tone> = {
-  "Lumen Atelier": "plum",
+  "Afterglow": "plum",
   "Velvet Theory": "rose",
   "Pulse Lab": "sand",
-  "Lumen Essentials": "sage",
+  "Afterglow Essentials": "sage",
 };
 
 export function ProductCard({ product }: { product: Product }) {

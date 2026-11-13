@@ -5,7 +5,7 @@ import { BUNDLE_DISCOUNT_PCT, bundleOptions } from "@/lib/bundle";
 import { BundleBuilder } from "@/components/rituals/bundle-builder";
 
 export const metadata: Metadata = {
-  title: "Build your ritual · Lumen Atelier",
+  title: "Build your ritual · Afterglow",
   description: `Pick a device, a glide and an extra, and save ${BUNDLE_DISCOUNT_PCT}% on the set.`,
 };
 

@@ -4,7 +4,7 @@ import { toolDefinitions } from "@/lib/advisor/tools";
 import { ApiExplorer } from "@/components/agents/api-explorer";
 
 export const metadata: Metadata = {
-  title: "Agent API · Lumen Atelier",
+  title: "Agent API · Afterglow",
   description: "The same seven tools behind the shopping advisor, available to outside AI agents.",
 };
 
@@ -34,7 +34,7 @@ export default function AgentsPage() {
         <p className="text-[11px] tracking-[0.2em] text-ink-muted">FOR DEVELOPERS</p>
         <h1 className="mt-3 font-display text-5xl tracking-tight text-plum-800 md:text-6xl">Agent API</h1>
         <p className="mt-5 text-[17px] leading-relaxed text-ink-muted">
-          Let other AI agents shop this store safely: the seven tools behind the Lumen advisor, as a small REST API.
+          Let other AI agents shop this store safely: the seven tools behind the Afterglow advisor, as a small REST API.
         </p>
       </header>
 

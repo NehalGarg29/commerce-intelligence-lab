@@ -11,7 +11,7 @@ export const AUDIENCES: Record<string, string> = {
   "for-lgbtq": "LGBTQ+",
 };
 
-export const BRANDS = ["Lumen Atelier", "Velvet Theory", "Pulse Lab", "Lumen Essentials"];
+export const BRANDS = ["Afterglow", "Velvet Theory", "Pulse Lab", "Afterglow Essentials"];
 const BRAND_BY_SLUG = Object.fromEntries(BRANDS.map((b) => [slugify(b), b]));
 
 export const BUDGETS = [50, 100, 150];
@@ -92,8 +92,8 @@ export function applyFilters(products: Product[], f: ShopFilters): Product[] {
     if (p.tags.includes("gift-box") && !f.q) return false;
     if (f.q && !matchesQuery(p, f.q)) return false;
     if (f.audience && !p.tags.includes(f.audience)) return false;
-    if (f.category === "care" && p.brand !== "Lumen Essentials") return false;
-    if (f.audience && p.brand === "Lumen Essentials") return false;
+    if (f.category === "care" && p.brand !== "Afterglow Essentials") return false;
+    if (f.audience && p.brand === "Afterglow Essentials") return false;
     if (f.brand && slugify(p.brand) !== f.brand) return false;
     if (f.tags.some((t) => !p.tags.includes(t))) return false;
     if (f.maxPrice !== null && p.priceMin > f.maxPrice) return false;

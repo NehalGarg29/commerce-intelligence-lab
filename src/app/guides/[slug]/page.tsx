@@ -16,8 +16,8 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const guide = getGuide((await params).slug);
   return guide
-    ? { title: `${guide.name}: how to use · Lumen Atelier`, description: guide.summary }
-    : { title: "Guide not found · Lumen Atelier" };
+    ? { title: `${guide.name}: how to use · Afterglow`, description: guide.summary }
+    : { title: "Guide not found · Afterglow" };
 }
 
 async function GuideProducts({ slug }: { slug: string }) {

@@ -8,7 +8,7 @@ import { redirect } from "next/navigation";
 import { requireSignedIn } from "@/lib/auth/session";
 
 export const metadata: Metadata = {
-  title: "Retail partners · Lumen Atelier",
+  title: "Retail partners · Afterglow",
   robots: { index: false, follow: false },
 };
 

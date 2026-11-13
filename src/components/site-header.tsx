@@ -19,11 +19,10 @@ export function SiteHeader() {
     <>
       <header className="sticky top-0 z-40 border-b border-white/40 bg-ivory/50 backdrop-blur-xl backdrop-saturate-150">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 pt-4 md:px-12 md:py-4">
-          <Link href="/" className="leading-tight">
+          <Link href="/" className="leading-tight" aria-label="Afterglow home">
             <span className="block font-display text-2xl tracking-tight text-plum-800 md:text-[28px]">
-              Lumen Atelier
+              Afterglow
             </span>
-            <span className="block text-[10px] tracking-[0.18em] text-ink-muted">CONCEPT STOREFRONT</span>
           </Link>
 
           <nav aria-label="Main" className="hidden gap-8 text-[15px] md:flex">

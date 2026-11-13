@@ -10,7 +10,7 @@ import { removeLineAction, updateLineAction } from "@/app/actions/cart";
 import { AskAdvisorButton } from "@/components/advisor/ask-advisor-button";
 import { CheckoutLink } from "@/components/analytics/checkout-link";
 
-export const metadata: Metadata = { title: "Your bag · Lumen Atelier" };
+export const metadata: Metadata = { title: "Your bag · Afterglow" };
 
 async function CartView() {
   const cart = await getCart();

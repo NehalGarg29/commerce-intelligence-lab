@@ -65,7 +65,7 @@ export function AdvisorWidget() {
       {open && (
         <section
           role="dialog"
-          aria-label="Lumen advisor"
+          aria-label="Afterglow advisor"
           className="fixed inset-0 z-[60] flex flex-col overflow-hidden bg-ivory sm:inset-auto sm:bottom-6 sm:right-6 sm:h-[min(680px,calc(100vh-3rem))] sm:w-[420px] sm:rounded-3xl sm:border sm:border-lavender-100 sm:shadow-[0_30px_80px_-30px_rgba(46,15,41,0.55)]"
         >
           <header className="flex items-center justify-between gap-3 border-b border-lavender-100 bg-white/80 px-5 py-4 backdrop-blur">
@@ -74,7 +74,7 @@ export function AdvisorWidget() {
                 <Sparkles size={16} aria-hidden="true" />
               </span>
               <div>
-                <p className="font-display text-lg leading-tight text-plum-800">Lumen advisor</p>
+                <p className="font-display text-lg leading-tight text-plum-800">Afterglow advisor</p>
                 <p className="text-[12px] text-ink-muted">Private · checks live stock and reviews</p>
               </div>
             </div>

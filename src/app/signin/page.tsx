@@ -7,7 +7,7 @@ import { safeNext } from "@/lib/auth/token";
 import { listRetailers } from "@/lib/b2b/retailers";
 import { signInAction, signOutAction } from "@/app/actions/auth";
 
-export const metadata: Metadata = { title: "Sign in · Lumen Atelier", robots: { index: false, follow: false } };
+export const metadata: Metadata = { title: "Sign in · Afterglow", robots: { index: false, follow: false } };
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
 const one = (v: string | string[] | undefined) => (Array.isArray(v) ? v[0] : v);

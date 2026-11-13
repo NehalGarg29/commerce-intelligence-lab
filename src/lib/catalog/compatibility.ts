@@ -11,7 +11,7 @@ export type CareAdvice = {
 };
 
 export function careAdvice(p: Product): CareAdvice | null {
-  if (p.brand === "Lumen Essentials") return null;
+  if (p.brand === "Afterglow Essentials") return null;
   // Only devices get lubricant guidance (not gift boxes, cards or accessories).
   const isDevice =
     p.tags.includes("rechargeable") || p.tags.includes("body-safe-silicone") || /stroker|sleeve/i.test(p.type);

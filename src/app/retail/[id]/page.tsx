@@ -16,7 +16,7 @@ import { canViewRetailer } from "@/lib/auth/session";
 
 type Params = Promise<{ id: string }>;
 
-export const metadata: Metadata = { title: "Retail portal · Lumen Atelier", robots: { index: false, follow: false } };
+export const metadata: Metadata = { title: "Retail portal · Afterglow", robots: { index: false, follow: false } };
 
 function Tile({ label, value, note }: { label: string; value: string; note?: string }) {
   return (

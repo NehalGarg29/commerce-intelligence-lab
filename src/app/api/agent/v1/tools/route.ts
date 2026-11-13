@@ -5,7 +5,7 @@ import { toolDefinitions } from "@/lib/advisor/tools";
 export async function GET() {
   return Response.json(
     {
-      name: "Lumen Atelier Agent API",
+      name: "Afterglow Agent API",
       version: "v1",
       dataset: "Fictional demo store (independent concept prototype)",
       auth: "Authorization: Bearer <api key>",

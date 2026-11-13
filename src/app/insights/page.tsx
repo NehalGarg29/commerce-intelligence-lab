@@ -8,7 +8,7 @@ import { computeInsights, rate } from "@/lib/analytics/insights";
 import { requireMerchant } from "@/lib/auth/session";
 
 export const metadata: Metadata = {
-  title: "Insights · Lumen Atelier",
+  title: "Insights · Afterglow",
   robots: { index: false, follow: false },
 };
 

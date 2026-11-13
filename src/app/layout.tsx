@@ -11,7 +11,7 @@ const fraunces = Fraunces({ subsets: ["latin"], variable: "--font-fraunces" });
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 export const metadata: Metadata = {
-  title: "Lumen Atelier · Commerce Intelligence Lab",
+  title: "Afterglow",
   description: "Independent concept prototype with fictional demo data.",
 };
 

@@ -4,7 +4,7 @@ import { ArrowRight, Droplets, Gauge, Sparkles } from "lucide-react";
 import { GROUP_LABELS, GUIDES, GUIDE_DISCLAIMER, type GuideGroup } from "@/lib/guides";
 
 export const metadata: Metadata = {
-  title: "Guides · Lumen Atelier",
+  title: "Guides · Afterglow",
   description: "Plain-language guides to what each product is, who it suits and how to use it.",
 };
 

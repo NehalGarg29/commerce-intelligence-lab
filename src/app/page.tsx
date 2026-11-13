@@ -56,10 +56,10 @@ function findCollection(collections: Collection[], handle: string) {
 }
 
 const brands = [
-  { name: "Lumen Atelier", line: "Sculptural, design-led massagers and vibrators", lead: "aura-wand" },
+  { name: "Afterglow", line: "Sculptural, design-led massagers and vibrators", lead: "aura-wand" },
   { name: "Velvet Theory", line: "Made to be shared, built for couples", lead: "tide-duo" },
   { name: "Pulse Lab", line: "Strokers, rings and prostate essentials, engineered", lead: "flux-stroker" },
-  { name: "Lumen Essentials", line: "Gentle care for every collection", lead: "silk-glide" },
+  { name: "Afterglow Essentials", line: "Gentle care for every collection", lead: "silk-glide" },
 ];
 
 const ADVISOR_EXAMPLE = ["ember-mini", "halo-mini", "drift"];
@@ -392,7 +392,7 @@ export default async function HomePage() {
             <figure className="rounded-3xl border border-lavender-100 bg-white p-5 shadow-xl shadow-plum-900/5 md:p-6">
               <figcaption className="mb-4 flex items-center justify-between text-xs text-ink-muted">
                 <span className="flex items-center gap-1.5 font-medium text-plum-800">
-                  <Sparkles size={14} aria-hidden="true" /> Lumen advisor
+                  <Sparkles size={14} aria-hidden="true" /> Afterglow advisor
                 </span>
                 <span className="rounded-full bg-lavender-50 px-2.5 py-1">Example conversation</span>
               </figcaption>
